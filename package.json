@@ -11,7 +11,7 @@
     "lint:write": "biome lint --write .",
     "format": "biome format .",
     "format:write": "biome format --write .",
-    "check": "biome check .",
+    "check": "biome check --organize-imports-enabled=false .",
     "check:write": "biome check --write .",
     "validate": "pnpm check && pnpm typecheck",
     "prepare": "husky install",

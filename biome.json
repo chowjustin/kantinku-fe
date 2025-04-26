@@ -17,7 +17,9 @@
       "**/pnpm-lock.yaml"
     ]
   },
-  "organizeImports": { "enabled": true },
+  "organizeImports": {
+    "enabled": false
+  },
   "linter": {
     "enabled": true,
     "rules": {
@@ -52,7 +54,7 @@
         "noUnsafeOptionalChaining": "error",
         "noUnusedImports": "warn",
         "noUnusedLabels": "error",
-        "noUnusedVariables": "off",
+        "noUnusedVariables": "warn",
         "useArrayLiterals": "off",
         "useIsNan": "error",
         "useValidForDirection": "error",
