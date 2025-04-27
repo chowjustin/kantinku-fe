@@ -28,11 +28,13 @@
   "dependencies": {
     "@tanstack/react-query": "^5.32.0",
     "@tanstack/react-table": "^8.20.6",
+    "@types/leaflet": "1.9.17",
     "auto-zustand-selectors-hook": "^3.0.1",
     "axios": "^1.7.7",
     "clsx": "^2.1.0",
     "cssnano": "^6.0.3",
     "immer": "^10.1.1",
+    "leaflet": "1.9.4",
     "lucide-react": "0.503.0",
     "next": "14.2.1",
     "next-sitemap": "^4.2.3",
