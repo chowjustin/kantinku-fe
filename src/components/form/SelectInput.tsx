@@ -118,17 +118,17 @@ export default function SelectInput({
     }),
     option: (styles, state) => ({
       ...styles,
-      color: state.isFocused ? "white" : state.isSelected ? "white" : "black",
+      color: state.isFocused ? "white" : state.isSelected ? "white" : "#1e3a8a",
       fontWeight: state.isSelected ? "500" : "normal",
       background: state.isDisabled
         ? "#F3F4F6" // light gray
         : state.isFocused
-          ? "#ea8080" // primary-400
+          ? "#3b82f6" // blue-500
           : state.isSelected
-            ? "#ea8080" // primary-400
+            ? "#3b82f6" // blue-500
             : "white",
       ":hover": {
-        background: "#ee9a9a ", // primary-300
+        background: "#60a5fa", // blue-400
         color: "white",
       },
       cursor: "pointer",
@@ -138,7 +138,7 @@ export default function SelectInput({
       display: "flex",
       alignItems: "center",
       gap: "0.25rem",
-      background: "#ea8080", // primary-400
+      background: "#3b82f6", // blue-500
       borderRadius: "0.375rem",
       padding: "0.25rem 0.75rem",
       margin: 0,
@@ -155,7 +155,7 @@ export default function SelectInput({
       padding: 0,
       paddingLeft: "0.5rem",
       "&:hover": {
-        color: "#6b7280", // gray-500
+        color: "#93c5fd", // blue-300
         backgroundColor: "transparent",
       },
     }),
@@ -163,13 +163,12 @@ export default function SelectInput({
       ...styles,
       borderRadius: "0.5rem",
       overflow: "hidden",
-      maxHeight: "250px", // Ensures scrolling if needed
-      // scrollPaddingBottom: "0.5rem",
+      maxHeight: "250px",
     }),
     menuList: (styles) => ({
       ...styles,
-      maxHeight: "250px", // Sets the max height for scrolling
-      overflowY: "auto", // Enables vertical scrolling
+      maxHeight: "250px",
+      overflowY: "auto",
       scrollPaddingBottom: "0.5rem",
     }),
   };
