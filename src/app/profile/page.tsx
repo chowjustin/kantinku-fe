@@ -77,7 +77,6 @@ export default function ProfilePage() {
             label="Role"
             value={user?.role || ""}
             onEdit={() => toggleModal("role", true)}
-            canEdit={user?.role === "admin"}
           />
 
           <ProfileField

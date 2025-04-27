@@ -3,9 +3,8 @@ import { Dialog, DialogPanel } from "@headlessui/react";
 import clsxm from "@/lib/clsxm";
 import { X } from "lucide-react";
 import Button from "@/components/buttons/Button";
-import { Controller, FormProvider, useForm } from "react-hook-form";
-import LabelText from "@/components/form/LabelText";
-import TOption from "@/components/table/TOption";
+import { FormProvider, useForm } from "react-hook-form";
+import SelectInput from "@/components/form/SelectInput";
 
 interface EditRoleModalProps {
   isOpen: boolean;
@@ -52,27 +51,15 @@ export default function EditRoleModal({
 
           <FormProvider {...methods}>
             <form onSubmit={handleSubmit(onSubmit)}>
-              <div className="space-y-2 mb-4 w-full">
-                <LabelText>Edit Role</LabelText>
-                <Controller
-                  name="role"
-                  control={control}
-                  rules={{ required: "Role harus dipilih" }}
-                  render={({ field }) => (
-                    <>
-                      <TOption
-                        value={field.value}
-                        title=""
-                        onChange={(selectedValue) => {
-                          field.onChange(selectedValue);
-                        }}
-                        options={roleOptions}
-                      />
-                    </>
-                  )}
-                />
-              </div>
-              <div className="flex justify-end space-x-3">
+              <SelectInput
+                id="role"
+                label="Edit role"
+                options={roleOptions}
+                placeholder="Edit Role"
+                isSearchable={false}
+                validation={{ required: "Role wajib diisi!" }}
+              />
+              <div className="flex justify-end space-x-3 mt-4">
                 <Button
                   type="button"
                   onClick={() => setIsOpen(false)}

@@ -111,9 +111,9 @@ export default function SelectInput({
     }),
     dropdownIndicator: (styles) => ({
       ...styles,
-      color: "#1e40af", // blue-800
+      color: "#111827", // gray-900
       "&:hover": {
-        color: "#3b82f6", // blue-500
+        color: "#878787", // gray
       },
     }),
     option: (styles, state) => ({
