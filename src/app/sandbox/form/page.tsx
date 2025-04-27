@@ -70,7 +70,15 @@ export default function SandboxPage() {
               options={options}
               placeholder="Pilih opsi"
             />
-
+            <SelectInput
+              id="sandbox3"
+              label="Multi SelectInput"
+              options={options}
+              placeholder="Pilih opsi"
+              isMulti
+              isSearchable={false}
+              validation={{ required: "SelectInput wajib diisi!" }}
+            />
             <Button type="submit">Submit</Button>
           </form>
         </FormProvider>
