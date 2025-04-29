@@ -1,11 +1,9 @@
 "use client";
 
-import { useForm, FormProvider } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import Button from "@/components/buttons/Button";
 import LabelText from "@/components/form/LabelText";
 import Image from "next/image";
-import ImageLogin from "../../../../public/images/ImageLogin.png";
-import LogoKantinku from "../../../../public/images/LogoKantinku.png";
 import Input from "@/components/form/Input";
 
 type LoginFormValues = {
@@ -24,7 +22,9 @@ const Login = () => {
     <div className="flex flex-col md:grid md:grid-cols-2 h-screen">
       <div className="relative hidden md:flex flex-col w-full h-screen bg-[#243E80] rounded-r-3xl items-center justify-center gap-8">
         <Image
-          src={ImageLogin}
+          src="/images/ImageLogin.png"
+          width={1000}
+          height={1000}
           alt="Background"
           className="object-cover object-center z-10 w-60 h-60"
           priority
@@ -40,7 +40,9 @@ const Login = () => {
       <div className="relative flex flex-col items-center justify-center w-full h-screen p-6 lg:p-0 bg-cover bg-center lg:bg-none bg-white">
         <div className="bg-typo-white w-full max-w-lg">
           <Image
-            src={LogoKantinku}
+            src="/images/LogoKantinku.png"
+            width={1000}
+            height={1000}
             alt="Logo"
             className="object-contain w-40 mb-4 mx-auto"
             priority
