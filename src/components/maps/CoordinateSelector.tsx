@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
+import dynamic from "next/dynamic";
 
 interface CoordinateSelectorProps {
   onCoordinateChange?: (
@@ -10,10 +9,22 @@ interface CoordinateSelectorProps {
   defaultValue?: { lat: number; lng: number } | null;
 }
 
-const CoordinateSelector: React.FC<CoordinateSelectorProps> = ({
+// This empty component will be shown during SSR before the actual map loads
+const MapPlaceholder = () => (
+  <div className="w-full h-96 rounded-lg shadow-md bg-gray-100 flex items-center justify-center">
+    <p className="text-gray-500">Peta sedang dimuat...</p>
+  </div>
+);
+
+// The actual CoordinateSelector content component - will only be loaded on client side
+const CoordinateSelectorContent: React.FC<CoordinateSelectorProps> = ({
   onCoordinateChange,
   defaultValue,
 }) => {
+  // Import Leaflet only on client side
+  const L = require("leaflet");
+  require("leaflet/dist/leaflet.css");
+
   const [selectedLocation, setSelectedLocation] = useState<{
     lat: number;
     lng: number;
@@ -153,6 +164,20 @@ const CoordinateSelector: React.FC<CoordinateSelectorProps> = ({
       </div>
     </div>
   );
+};
+
+// Use Next.js dynamic import to only load this component on the client side
+const DynamicCoordinateSelector = dynamic(
+  () => Promise.resolve(CoordinateSelectorContent),
+  {
+    ssr: false, // This will prevent server-side rendering of this component
+    loading: MapPlaceholder, // Show this while the component is loading
+  },
+);
+
+// Wrapper component that handles both server-side and client-side rendering
+const CoordinateSelector: React.FC<CoordinateSelectorProps> = (props) => {
+  return <DynamicCoordinateSelector {...props} />;
 };
 
 export default CoordinateSelector;
