@@ -3,11 +3,21 @@ import React, { useEffect, useRef, useState } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-const CoordinateSelector: React.FC = () => {
+interface CoordinateSelectorProps {
+  onCoordinateChange?: (
+    coordinates: { lat: number; lng: number } | null,
+  ) => void;
+  defaultValue?: { lat: number; lng: number } | null;
+}
+
+const CoordinateSelector: React.FC<CoordinateSelectorProps> = ({
+  onCoordinateChange,
+  defaultValue,
+}) => {
   const [selectedLocation, setSelectedLocation] = useState<{
     lat: number;
     lng: number;
-  } | null>(null);
+  } | null>(defaultValue || null);
   const mapRef = useRef<HTMLDivElement>(null);
   const leafletMapRef = useRef<L.Map | null>(null);
   const markerRef = useRef<L.Marker | null>(null);
@@ -40,6 +50,36 @@ const CoordinateSelector: React.FC = () => {
     };
   }, []);
 
+  // Update parent form when location changes
+  useEffect(() => {
+    if (onCoordinateChange) {
+      onCoordinateChange(selectedLocation);
+    }
+  }, [selectedLocation, onCoordinateChange]);
+
+  // Initialize marker if defaultValue is provided
+  useEffect(() => {
+    if (defaultValue && leafletMapRef.current && !markerRef.current) {
+      const map = leafletMapRef.current;
+      const marker = L.marker([defaultValue.lat, defaultValue.lng], {
+        draggable: true,
+        icon: createCustomIcon(),
+      }).addTo(map);
+
+      marker.on("dragend", () => {
+        const position = marker.getLatLng();
+        const newLocation = {
+          lat: position.lat,
+          lng: position.lng,
+        };
+        setSelectedLocation(newLocation);
+      });
+
+      markerRef.current = marker;
+      map.setView([defaultValue.lat, defaultValue.lng], 15);
+    }
+  }, [defaultValue, leafletMapRef.current]);
+
   const initMap = () => {
     if (!mapRef.current) return;
 
@@ -48,8 +88,6 @@ const CoordinateSelector: React.FC = () => {
       [itsCoordinates.lat, itsCoordinates.lng],
       15,
     );
-
-    // Add a custom map tile layer (Stamen Watercolor style)
 
     L.tileLayer(
       "https://{s}.tile.jawg.io/jawg-sunny/{z}/{x}/{y}{r}.png?access-token=uuMcm9EL0bGLAFMaq8QDkiiLPjOPRgThwD63qsAWZoRNIj7EQiwBafjZ65ulsudH",
@@ -95,55 +133,23 @@ const CoordinateSelector: React.FC = () => {
         markerRef.current = marker;
       }
     });
-
-    // Add a marker for ITS Surabaya
-    // L.marker([itsCoordinates.lat, itsCoordinates.lng], {
-    //     icon: createCustomIcon()
-    // })
-    //     .addTo(map)
-    //     .bindPopup('Sepuluh Nopember Institute of Technology (ITS), Surabaya')
-    //     .openPopup();
-  };
-
-  const handleSendCoordinates = () => {
-    if (selectedLocation) {
-      // In a real application, you would send this to your backend
-      console.log("Sending coordinates to backend:", selectedLocation);
-      alert(
-        `Coordinates (${selectedLocation.lat.toFixed(6)}, ${selectedLocation.lng.toFixed(6)}) sent to backend!`,
-      );
-    } else {
-      alert("Please select a location on the map first.");
-    }
   };
 
   return (
     <div className="flex flex-col space-y-4">
-      <h2 className="text-2xl font-bold">Select a Location</h2>
       <div ref={mapRef} className="w-full h-96 rounded-lg shadow-md"></div>
 
       <div className="flex items-center justify-between">
         <div className="text-sm">
           {selectedLocation ? (
             <p>
-              Selected: {selectedLocation.lat.toFixed(6)},{" "}
+              Koordinat dipilih: {selectedLocation.lat.toFixed(6)},{" "}
               {selectedLocation.lng.toFixed(6)}
             </p>
           ) : (
-            <p>Click on the map to select a location</p>
+            <p>Klik di peta untuk memilih lokasi</p>
           )}
         </div>
-        <button
-          onClick={handleSendCoordinates}
-          disabled={!selectedLocation}
-          className={`px-4 py-2 rounded-md ${
-            selectedLocation
-              ? "bg-blue-500 hover:bg-blue-600 text-white"
-              : "bg-gray-300 text-gray-500 cursor-not-allowed"
-          }`}
-        >
-          Send Coordinates
-        </button>
       </div>
     </div>
   );

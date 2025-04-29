@@ -2,13 +2,13 @@
 
 import Image from "next/image";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import FormMahasiswa from "@/app/(auth)/register/_components/FormMahasiswa";
-import FormTenant from "@/app/(auth)/register/_components/FormTenant";
+import FormMahasiswa from "@/app/(auth)/register/components/FormMahasiswa";
+import FormTenant from "@/app/(auth)/register/components/FormTenant";
 
 const Register = () => {
   return (
     <div className="flex h-full">
-      <div className="hidden md:flex flex-col w-1/2 h-screen bg-[#243E80] rounded-r-3xl items-center justify-center gap-8 fixed left-0 top-0 z-10">
+      <div className="hidden md:flex flex-col w-1/2 h-screen bg-[#243E80] items-center justify-center gap-8 fixed left-0 top-0 z-10">
         <Image
           src="/images/ImageLogin.png"
           width={1000}

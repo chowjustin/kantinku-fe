@@ -20,7 +20,7 @@ const Login = () => {
 
   return (
     <div className="flex flex-col md:grid md:grid-cols-2 h-screen">
-      <div className="relative hidden md:flex flex-col w-full h-screen bg-[#243E80] rounded-r-3xl items-center justify-center gap-8">
+      <div className="relative hidden md:flex flex-col w-full h-screen bg-[#243E80] items-center justify-center gap-8">
         <Image
           src="/images/ImageLogin.png"
           width={1000}

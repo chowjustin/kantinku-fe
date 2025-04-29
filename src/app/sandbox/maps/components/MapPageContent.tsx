@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
-import CoordinateSelector from "./CoordinateSelector";
-import LocationsDisplay from "./LocationsDisplay";
+import CoordinateSelector from "../../../../components/maps/CoordinateSelector";
+import LocationsDisplay from "../../../../components/maps/LocationsDisplay";
 
 const MapPageContent: React.FC = () => {
   return (
