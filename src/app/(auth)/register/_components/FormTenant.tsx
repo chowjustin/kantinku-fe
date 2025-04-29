@@ -24,7 +24,7 @@ const FormTenant = () => {
   ];
 
   const onSubmit = (data: RegisterFormValues) => {
-    console.log("Register data:", data);
+    // console.log("Register data:", data);
   };
 
   const canteenId = methods.watch("canteen_id");

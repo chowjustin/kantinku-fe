@@ -16,7 +16,7 @@ const FormMahasiswa = () => {
   const methods = useForm<RegisterFormValues>();
 
   const onSubmit = (data: RegisterFormValues) => {
-    console.log("Register data:", data);
+    // console.log("Register data:", data);
   };
 
   return (
