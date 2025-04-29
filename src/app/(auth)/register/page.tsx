@@ -1,18 +1,18 @@
 "use client";
 
 import Image from "next/image";
-import ImageLogin from "../../../../public/images/ImageLogin.png";
-import LogoKantinku from "../../../../public/images/LogoKantinku.png";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import FormMahasiswa from "./_components/FormMahasiswa";
-import FormTenant from "./_components/FormTenant";
+import FormMahasiswa from "@/app/(auth)/register/_components/FormMahasiswa";
+import FormTenant from "@/app/(auth)/register/_components/FormTenant";
 
 const Register = () => {
   return (
     <div className="flex h-full">
       <div className="hidden md:flex flex-col w-1/2 h-screen bg-[#243E80] rounded-r-3xl items-center justify-center gap-8 fixed left-0 top-0 z-10">
         <Image
-          src={ImageLogin}
+          src="/images/ImageLogin.png"
+          width={1000}
+          height={1000}
           alt="Background"
           className="object-cover object-center z-10 w-60 h-60"
           priority
@@ -28,7 +28,9 @@ const Register = () => {
       <div className="relative flex flex-col justify-end w-full md:w-1/2 h-full p-6 lg:p-8 bg-cover bg-center bg-white ml-auto z-20">
         <div className="bg-typo-white w-full px-12">
           <Image
-            src={LogoKantinku}
+            src="/images/LogoKantinku.png"
+            width={1000}
+            height={1000}
             alt="Logo"
             className="object-contain w-40 mb-4 mx-auto"
             priority
