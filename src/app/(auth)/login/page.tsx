@@ -1,12 +1,11 @@
 "use client";
 
-import React from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import Button from "@/components/buttons/Button";
 import LabelText from "@/components/form/LabelText";
 import Image from "next/image";
-import ImageLogin from "/public/images/ImageLogin.png";
-import LogoKantinku from "/public/images/LogoKantinku.png";
+import ImageLogin from "../../../../public/images/ImageLogin.png";
+import LogoKantinku from "../../../../public/images/LogoKantinku.png";
 import Input from "@/components/form/Input";
 
 type LoginFormValues = {
@@ -17,8 +16,8 @@ type LoginFormValues = {
 const Login = () => {
   const methods = useForm<LoginFormValues>();
 
-  const onSubmit = (data: LoginFormValues) => {
-    console.log("Login data:", data);
+  const onSubmit = (_data: LoginFormValues) => {
+    // console.log("Login data:", data);
   };
 
   return (
