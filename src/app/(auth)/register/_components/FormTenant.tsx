@@ -23,7 +23,7 @@ const FormTenant = () => {
     { value: "other", label: "Lainnya" },
   ];
 
-  const onSubmit = (data: RegisterFormValues) => {
+  const onSubmit = (_data: RegisterFormValues) => {
     // console.log("Register data:", data);
   };
 

@@ -15,7 +15,7 @@ type RegisterFormValues = {
 const FormMahasiswa = () => {
   const methods = useForm<RegisterFormValues>();
 
-  const onSubmit = (data: RegisterFormValues) => {
+  const onSubmit = (_data: RegisterFormValues) => {
     // console.log("Register data:", data);
   };
 
