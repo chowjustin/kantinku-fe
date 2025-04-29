@@ -2,8 +2,8 @@
 
 import React from "react";
 import Image from "next/image";
-import ImageLogin from "/public/images/ImageLogin.png";
-import LogoKantinku from "/public/images/LogoKantinku.png";
+import ImageLogin from "../../../../public/images/ImageLogin.png";
+import LogoKantinku from "../../../../public/images/LogoKantinku.png";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import FormMahasiswa from "./_components/FormMahasiswa";
 import FormTenant from "./_components/FormTenant";
