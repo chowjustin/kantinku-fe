@@ -3,7 +3,7 @@ import Image from "next/image";
 
 const Hero = () => {
   return (
-    <div className="relative w-full min-h-[90vh] flex items-center">
+    <div className="relative w-full min-h-[100vh] flex items-center">
       {/* Background */}
       <Image
         src="/images/BackgroundHero.png"
@@ -16,7 +16,7 @@ const Hero = () => {
       <div className="absolute inset-0 z-10 bg-gradient-to-r from-white/100 via-white/80 to-transparent" />
 
       {/* Text Banner */}
-      <div className="relative z-20 pl-20 flex flex-col gap-5">
+      <div className="relative z-20 px-8 md:pl-20 flex flex-col gap-5">
         <Image
           src="/images/LogoKantinku.png"
           alt="Logo"
@@ -24,10 +24,10 @@ const Hero = () => {
           height={150}
         />
 
-        <h1 className="text-5xl font-bold max-w-xs leading-[64px]">
+        <h1 className="text-4xl md:text-5xl font-bold max-w-xs leading-[48px] md:leading-[64px]">
           Quick Meals, Happy Deals!
         </h1>
-        <p className="text-2xl max-w-md">
+        <p className="text-xl md:text-2xl max-w-md">
           No more waiting in line, your canteen favorites are just a tap away!
         </p>
         <Button
