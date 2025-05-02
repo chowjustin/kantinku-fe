@@ -2,20 +2,28 @@
 
 import { FormProvider, useForm } from "react-hook-form";
 import Button from "@/components/buttons/Button";
-import LabelText from "@/components/form/LabelText";
 import Image from "next/image";
 import Input from "@/components/form/Input";
+import { LoginRequest } from "@/types/auth/login";
+import useLoginMutation, { LoginTypes } from "@/app/hooks/useLoginMutation";
+import { useState } from "react";
+import withAuth from "@/components/hoc/withAuth";
 
-type LoginFormValues = {
-  email: string;
-  password: string;
-};
+export default withAuth(Login, "public");
 
-const Login = () => {
-  const methods = useForm<LoginFormValues>();
+function Login() {
+  const methods = useForm<LoginRequest>({
+    mode: "onChange",
+  });
 
-  const onSubmit = (_data: LoginFormValues) => {
-    // console.log("Login data:", data);
+  const { handleSubmit } = methods;
+  const [loginType, setLoginType] = useState<LoginTypes>("user");
+
+  const { mutate: mutateLogin, isPending } = useLoginMutation({
+    type: loginType,
+  });
+  const onSubmit = (data: LoginRequest) => {
+    mutateLogin(data);
   };
 
   return (
@@ -37,8 +45,8 @@ const Login = () => {
         </div>
       </div>
 
-      <div className="relative flex flex-col items-center justify-center w-full h-screen p-6 lg:p-0 bg-cover bg-center lg:bg-none bg-white">
-        <div className="bg-typo-white w-full max-w-lg">
+      <div className="relative flex flex-col items-center justify-center w-full h-screen p-4 lg:p-8 bg-cover bg-center lg:bg-none bg-white">
+        <div className="bg-typo-white w-full px-12 max-md:px-0 max-lg:px-6">
           <Image
             src="/images/LogoKantinku.png"
             width={1000}
@@ -55,42 +63,49 @@ const Login = () => {
           </div>
 
           <FormProvider {...methods}>
-            <form
-              className="space-y-4"
-              onSubmit={methods.handleSubmit(onSubmit)}
-            >
-              <div className="space-y-2">
-                <LabelText labelTextClasname="text-sm font-medium">
-                  Email
-                </LabelText>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="Masukkan email"
-                  className="w-full"
-                  validation={{ required: "Email wajib diisi" }}
-                />
-              </div>
+            <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+              <Input
+                id="email"
+                label="Email"
+                type="email"
+                placeholder="Masukkan email"
+                className="w-full"
+                validation={{ required: "Email wajib diisi" }}
+              />
+              <Input
+                id="password"
+                type="password"
+                label="Kata Sandi"
+                placeholder="Masukkan kata sandi"
+                className="w-full"
+                validation={{ required: "Kata sandi wajib diisi" }}
+              />
 
               <div className="space-y-2">
-                <LabelText labelTextClasname="text-sm font-medium">
-                  Password
-                </LabelText>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="Masukkan kata sandi"
-                  className="w-full"
-                  validation={{ required: "Kata sandi wajib diisi" }}
-                />
+                <Button
+                  type="button"
+                  className="w-full bg-primary-main hover:bg-primary-hover border-none"
+                  onClick={() => {
+                    setLoginType("user");
+                    handleSubmit(onSubmit)();
+                  }}
+                  isLoading={loginType === "user" && isPending}
+                >
+                  Masuk Sebagai Mahasiswa
+                </Button>
+                <Button
+                  type="submit"
+                  variant="ghost"
+                  className="w-full border-primary-main border hover:text-primary-main transition-color duration-200"
+                  onClick={() => {
+                    setLoginType("tenant");
+                    handleSubmit(onSubmit)();
+                  }}
+                  isLoading={loginType === "tenant" && isPending}
+                >
+                  Masuk Sebagai Tenant
+                </Button>
               </div>
-
-              <Button
-                type="submit"
-                className="w-full bg-[#243E80] hover:bg-[#17306D] border-none"
-              >
-                Masuk
-              </Button>
 
               <div className="text-center mt-4">
                 <p className="text-md">
@@ -109,6 +124,4 @@ const Login = () => {
       </div>
     </div>
   );
-};
-
-export default Login;
+}

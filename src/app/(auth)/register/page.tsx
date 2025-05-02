@@ -25,8 +25,8 @@ const Register = () => {
         </div>
       </div>
 
-      <div className="relative flex flex-col justify-end w-full md:w-1/2 h-full p-6 lg:p-8 bg-cover bg-center bg-white ml-auto z-20">
-        <div className="bg-typo-white w-full px-12">
+      <div className="relative flex flex-col justify-end w-full md:w-1/2 h-full p-4 lg:p-8 bg-cover bg-center bg-white ml-auto z-20">
+        <div className="bg-typo-white w-full px-12 max-md:px-0 max-lg:px-6">
           <Image
             src="/images/LogoKantinku.png"
             width={1000}

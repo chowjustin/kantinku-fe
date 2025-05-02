@@ -4,6 +4,7 @@ import Cookies from "universal-cookie";
 
 import { getToken } from "@/lib/cookies";
 import { UninterceptedApiError } from "@/types/api";
+
 const context = <GetServerSidePropsContext>{};
 
 export const baseURL =
@@ -16,7 +17,6 @@ export const api = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-
   withCredentials: false,
 });
 
@@ -32,7 +32,7 @@ api.interceptors.request.use(function (config) {
         throw "Api Context not found. You must call `setApiContext(context)` before calling api on server-side";
 
       const cookies = new Cookies(context.req?.headers.cookie);
-      token = cookies.get("@sch/token");
+      token = cookies.get("kantinku_token");
     } else {
       token = getToken();
     }
