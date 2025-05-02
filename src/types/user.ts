@@ -1,20 +1,17 @@
 export type User = {
   id: string;
-  name: string;
-  username: string;
+  nama: string;
   email: string;
-  role: string;
+  nomor_telepon: string;
   password: string;
-  ttd: string;
-  verified: boolean;
-  authcode: string;
-  createdAt: string;
-  updatedAt: string;
+  nrp: string;
+  created_at: string;
+  role: string;
 };
 
 export type UpdateUserRequest = {
   id?: string;
-  name?: string;
+  nama?: string;
   email?: string;
   username?: string;
   password?: string;

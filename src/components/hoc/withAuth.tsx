@@ -3,15 +3,13 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import * as React from "react";
 import { toast } from "react-hot-toast";
-
-import Loading from "@/app/loading";
-import useAuthStore from "@/app/stores/useAuthStore";
-import api from "@/lib/api";
 import { getToken, removeToken } from "@/lib/cookies";
-import type { ApiResponse } from "@/types/api";
+import useAuthStore from "@/app/stores/useAuthStore";
 import { User } from "@/types/user";
+import Loading from "@/app/loading";
+import api from "@/lib/api";
 
-const ROLE = ["super_admin", "admin", "user"] as const;
+const ROLE = ["student", "tenant"] as const;
 
 type Role = (typeof ROLE)[number];
 
@@ -19,31 +17,43 @@ export interface WithAuthProps {
   user: User;
 }
 
-const LOGIN_ROUTE = "/signin";
+const USER_ROUTE = "/dashboard";
+const TENANT_ROUTE = "/tenant-dashboard";
+const LOGIN_ROUTE = "/login";
 
 export enum RouteRole {
-  /**
-     Dapat diakses hanya ketika user belum login (Umum)
-    */
   public,
-  /**
-   * Dapat diakses semuanya
-   */
-  optional,
-  /**
-   * For all authenticated user
-   * will push to login if user is not authenticated
-   */
-  user,
-  /**
-   * For all authenticated admin
-   * will push to login if user is not authenticated
-   */
-  admin,
-  login,
+  student,
+  tenant,
 }
 
 export const isRole = (p: Role): p is Role => ROLE.includes(p as Role);
+
+const hasAccess = (
+  userRole: Role,
+  routeRole: keyof typeof RouteRole,
+): boolean => {
+  switch (userRole) {
+    case "student":
+      return routeRole === "student" || routeRole === "public";
+    case "tenant":
+      return routeRole === "tenant" || routeRole === "public";
+
+    default:
+      return false;
+  }
+};
+
+const getDefaultRoute = (role: Role): string => {
+  switch (role) {
+    case "student":
+      return USER_ROUTE;
+    case "tenant":
+      return TENANT_ROUTE;
+    default:
+      return LOGIN_ROUTE;
+  }
+};
 
 /**
  * Add role-based access control to a component
@@ -77,33 +87,39 @@ export default function withAuth<T>(
         stopLoading();
         return;
       }
+      if (!user) {
+        const loadUser = async () => {
+          try {
+            const meEndpoint = getMeEndpoint(token);
+            const res = await api.get<{ data: User }>(meEndpoint);
 
-      const loadUser = async () => {
-        try {
-          const res = await api.get<ApiResponse<User>>("/users/me");
+            if (!res.data) {
+              toast.error("Sesi login tidak valid");
+              throw new Error("Sesi login tidak valid");
+            }
 
-          if (!res.data.data) {
-            toast.error("Sesi login tidak valid");
-            throw new Error("Sesi login tidak valid");
+            login({
+              ...res.data.data,
+              token,
+            });
+          } catch (err) {
+            await removeToken();
+          } finally {
+            stopLoading();
           }
+        };
 
-          login({
-            ...res.data.data,
-            token,
-          });
-        } catch (err) {
-          await removeToken();
-          console.error("Failed to fetch user data", err);
-        } finally {
-          stopLoading();
-        }
-      };
-
-      loadUser();
-    }, [isAuthenticated, login, logout, stopLoading]);
+        loadUser();
+      } else {
+        stopLoading();
+      }
+    }, [isAuthenticated, login, logout, stopLoading, user]);
 
     React.useEffect(() => {
-      checkAuth();
+      if (isLoading && !user) {
+        checkAuth();
+      }
+
       window.addEventListener("focus", checkAuth);
       return () => {
         window.removeEventListener("focus", checkAuth);
@@ -111,33 +127,81 @@ export default function withAuth<T>(
     }, [checkAuth]);
 
     React.useEffect(() => {
-      const Redirect = () => {
-        if (isAuthenticated) {
-          if (routeRole === "login") {
-            router.replace("/dashboard");
-          } else if (routeRole === "public" && redirect) {
-            router.replace(redirect as string);
+      const handleRedirect = () => {
+        if (isAuthenticated && user) {
+          // Handle login route redirect
+          if (pathName === LOGIN_ROUTE) {
+            router.replace(getDefaultRoute(user.role as Role));
+            return;
           }
-        } else if (routeRole !== "public" && routeRole !== "login") {
+
+          // Handle role-based access
+          if (routeRole === "public") {
+            if (redirect) {
+              router.replace(redirect as string);
+            } else {
+              router.replace(getDefaultRoute(user.role as Role));
+            }
+          } else if (!hasAccess(user.role as Role, routeRole)) {
+            router.replace(getDefaultRoute(user.role as Role));
+          }
+        } else if (routeRole !== "public") {
           router.replace(`${LOGIN_ROUTE}?redirect=${pathName}`);
         }
       };
 
       if (!isLoading) {
-        Redirect();
+        handleRedirect();
       }
     }, [isAuthenticated, isLoading, pathName, redirect, router, user]);
 
+    // Show loading state if:
+    // 1. Initial loading
+    // 2. Not authenticated and trying to access protected route
+    // 3. Authenticated but user data not yet loaded
+    // 4. Authenticated but doesn't have access to the route
     if (
-      (isLoading || !isAuthenticated) &&
-      routeRole !== "public" &&
-      routeRole !== "optional" &&
-      routeRole !== "login"
+      isLoading ||
+      (!isAuthenticated && routeRole !== "public") ||
+      (isAuthenticated && !user) ||
+      (isAuthenticated &&
+        user &&
+        routeRole !== "public" &&
+        !hasAccess(user.role as Role, routeRole))
     ) {
       return <Loading />;
     }
-    return <Component {...(props as T)} user={user} />;
+
+    // Only render the component if:
+    // 1. It's a public route
+    // 2. User is authenticated and has access
+    if (
+      routeRole === "public" ||
+      (isAuthenticated && user && hasAccess(user.role as Role, routeRole))
+    ) {
+      return <Component {...(props as T)} user={user} />;
+    }
+
+    // Fallback loading state - this shouldn't normally be reached
+    return <Loading />;
   }
 
   return ComponentWithAuth;
 }
+
+const getMeEndpoint = (token: string): string => {
+  // Try to decode token to determine role, or use a default endpoint
+  try {
+    // This is a simple check - you may need to implement proper JWT decoding
+    // depending on your token structure
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    if (payload && payload.role === "tenant") {
+      return "/tenant/me";
+    }
+  } catch (e) {
+    // If token parsing fails, we'll use the default endpoint
+  }
+
+  // Default to user endpoint
+  return "/user/me";
+};
