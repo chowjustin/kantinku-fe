@@ -94,57 +94,62 @@ const MenuContent = () => {
   }, []);
 
   return (
-    <div className="px-12 justify-center flex flex-wrap gap-8">
-      {/* {canteens.map((canteen) => ( */}
-      {dummyCanteens.map((canteen) => (
-        <Link key={canteen.id} href={`/tenant/detail/${canteen.id}`}>
-          <div
-            key={canteen.id}
-            className="group cursor-pointer flex flex-col gap-4"
-          >
-            <div className="relative w-full h-[300px]">
-              {/* Background Menu */}
-              <Image
-                src="/images/BackgroundMenu.png"
-                alt="Background"
-                width={100}
-                height={100}
-                className="w-full h-full"
-              />
-
-              {/* Menu Image */}
-              <div className="w-[270px] h-[285px] absolute left-[9px] top-[9px] rounded-tl-[68px] rounded-tr-[32px] rounded-b-[70px] overflow-clip">
+    <div className="container mx-auto px-4 py-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-4 md:gap-6 lg:gap-8">
+        {/* {canteens.map((canteen) => ( */}
+        {dummyCanteens.map((canteen) => (
+          <Link key={canteen.id} href={`/tenant/detail/${canteen.id}`}>
+            <div
+              key={canteen.id}
+              className="group cursor-pointer flex mx-auto flex-col gap-3 max-w-[300px]"
+            >
+              <div className="relative w-full aspect-square">
+                {/* Background Menu */}
                 <Image
-                  src="/images/BackgroundHero.png"
-                  alt="Menu Image"
+                  src="/images/BackgroundMenu.png"
+                  alt="Background"
                   fill
-                  className="object-cover w-full h-full"
+                  className="object-contain"
                 />
-              </div>
 
-              {/* Menu Shadow */}
-              <div className="group-hover:opacity-100 transition-all duration-300 opacity-0 w-[271px] h-[285px] bg-foreground/60 absolute left-[9px] top-[9px] rounded-tl-[68px] rounded-tr-[32px] rounded-b-[70px] overflow-clip">
-                <div className="flex w-full h-full items-center justify-center">
+                {/* Menu Image */}
+                <div className="absolute inset-0 m-[3%] rounded-tl-[25%] rounded-tr-[12%] rounded-b-[25%] overflow-hidden">
                   <Image
-                    src="/icons/icon-play.svg"
-                    alt="icon play"
-                    height={70}
-                    width={70}
+                    src="/images/BackgroundHero.png"
+                    alt="Menu Image"
+                    fill
+                    className="object-cover"
                   />
                 </div>
+
+                {/* Menu Shadow */}
+                <div className="group-hover:opacity-100 transition-all duration-300 opacity-0 absolute inset-0 m-[3%] bg-foreground/60 rounded-tl-[25%] rounded-tr-[12%] rounded-b-[25%] overflow-hidden">
+                  <div className="flex w-full h-full items-center justify-center">
+                    <div className="w-1/4 h-1/4 relative">
+                      <Image
+                        src="/icons/icon-play.svg"
+                        alt="icon play"
+                        fill
+                        className="object-contain"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Text */}
+              <div className="flex flex-col gap-1 pt-3 px-2">
+                <h4 className="text-base sm:text-lg md:text-xl lg:text-2xl text-center font-bold line-clamp-1">
+                  {canteen.nama}
+                </h4>
+                <p className="text-xs sm:text-sm md:text-base lg:text-lg text-center font-medium line-clamp-1 text-gray-700">
+                  {canteen.departement}
+                </p>
               </div>
             </div>
-
-            {/* Text */}
-            <div className="flex flex-col gap-1">
-              <h4 className="text-2xl text-center font-bold">{canteen.nama}</h4>
-              <p className="text-lg text-center font-medium">
-                {canteen.departement}
-              </p>
-            </div>
-          </div>
-        </Link>
-      ))}
+          </Link>
+        ))}
+      </div>
     </div>
   );
 };

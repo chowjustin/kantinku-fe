@@ -4,6 +4,7 @@ import { Loader2, LucideIcon } from "lucide-react";
 
 const ButtonVariant = [
   "blue",
+  "primary",
   "green",
   "yellow",
   "red",
@@ -77,6 +78,14 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
               "disabled:bg-blue-700",
               "focus-visible:ring-blue-400",
             ],
+            variant === "primary" && [
+              "bg-primary-main text-white",
+              "border border-primary-hover",
+              "hover:bg-primary-hover hover:text-white",
+              "active:bg-blue-700",
+              "disabled:bg-blue-700",
+              "focus-visible:ring-blue-400",
+            ],
             variant === "green" && [
               "bg-green-500 text-white",
               "border border-green-600",
@@ -125,9 +134,13 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             className={clsxm(
               "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2",
               {
-                "text-white": ["blue", "green", "red", "yellow"].includes(
-                  variant,
-                ),
+                "text-white": [
+                  "blue",
+                  "green",
+                  "red",
+                  "yellow",
+                  "primary",
+                ].includes(variant),
                 "text-blue-500": ["outline", "ghost"].includes(variant),
               },
             )}

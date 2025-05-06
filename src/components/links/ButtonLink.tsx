@@ -8,6 +8,7 @@ import clsxm from "@/lib/clsxm";
 
 const ButtonLinkVariant = [
   "blue",
+  "primary",
   "green",
   "yellow",
   "red",
@@ -71,6 +72,14 @@ const ButtonLink = React.forwardRef<HTMLAnchorElement, ButtonLinkProps>(
               "bg-blue-500 text-white",
               "border border-blue-600",
               "hover:bg-blue-600 hover:text-white",
+              "active:bg-blue-700",
+              "disabled:bg-blue-700",
+              "focus-visible:ring-blue-400",
+            ],
+            variant === "primary" && [
+              "bg-primary-main text-white",
+              "border border-primary-hover",
+              "hover:bg-primary-hover hover:text-white",
               "active:bg-blue-700",
               "disabled:bg-blue-700",
               "focus-visible:ring-blue-400",
