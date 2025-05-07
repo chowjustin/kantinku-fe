@@ -166,10 +166,7 @@ export default function MenuTable() {
   ];
 
   const table = useReactTable({
-    data: data.slice(
-      (params.page - 1) * params.size,
-      params.page * params.size,
-    ),
+    data: data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
