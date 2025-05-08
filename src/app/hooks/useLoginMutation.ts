@@ -40,7 +40,7 @@ export default function useLoginMutation({ type }: useLoginMutation) {
     },
     onSuccess: () => {
       toast.success("Anda berhasil login");
-      const redirectPath = type === "user" ? "/dashboard" : "/tenant-dashboard";
+      const redirectPath = type === "user" ? "/" : "/dashboard";
       router.push(redirectPath);
     },
     onError: (error) => {

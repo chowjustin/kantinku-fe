@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import { Menu, Search, X } from "lucide-react";
+import { CircleUser, Menu, Search, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import ButtonLink from "@/components/links/ButtonLink";
 import UnstyledLink from "@/components/links/UnstyledLink";
@@ -99,11 +99,12 @@ export default function Navbar() {
                 ) : (
                   <ButtonLink
                     variant="primary"
-                    href="/dashboard"
+                    href="/profile"
                     size="sm"
                     className="text-sm px-2 py-1 font-normal text-white md:leading-none"
+                    leftIcon={CircleUser}
                   >
-                    Dashboard
+                    Profile
                   </ButtonLink>
                 )}
               </div>
@@ -183,10 +184,11 @@ export default function Navbar() {
             <ButtonLink
               variant="primary"
               size="sm"
-              href="/dashboard"
+              href="/profile"
               className="text-lg font-normal text-white md:leading-none"
+              leftIcon={CircleUser}
             >
-              Dashboard
+              Profile
             </ButtonLink>
           )}
         </div>

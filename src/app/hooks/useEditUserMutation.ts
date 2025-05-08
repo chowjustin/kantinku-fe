@@ -4,16 +4,19 @@ import toast from "react-hot-toast";
 import { UpdateUserRequest } from "@/types/user";
 
 interface useEditUserMutationProps {
-  id: string;
+  isTenant: boolean;
 }
 
-export default function useEditUserMutation({ id }: useEditUserMutationProps) {
+export default function useEditUserMutation({
+  isTenant,
+}: useEditUserMutationProps) {
   const queryClient = useQueryClient();
 
   const { mutate, mutateAsync, isPending, data, isError, isSuccess } =
     useMutation({
       mutationFn: async (data: UpdateUserRequest) => {
-        return await api.patch(`/user/${id}`, data);
+        const path = isTenant ? "/tenant/me" : "/user/me";
+        return await api.patch(path, data);
       },
       onSuccess: () => {
         toast.success("Data berhasil diupdate!");

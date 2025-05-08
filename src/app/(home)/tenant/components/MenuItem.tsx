@@ -1,37 +1,29 @@
 import Button from "@/components/buttons/Button";
 import Image from "next/image";
+import { Menu } from "@/types/tenant/menu";
 
 interface PopularMenuItemProps {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
-  description: string;
+  menu: Menu;
 }
 
-const PopularMenuItem = ({
-  name,
-  price,
-  image,
-  description,
-}: PopularMenuItemProps) => {
+const MenuItem = ({ menu }: PopularMenuItemProps) => {
   return (
     <div className="border rounded-xl p-4 flex flex-col md:flex-row justify-between items-start gap-4 w-full">
       <div className="flex flex-col gap-2 justify-between h-full">
         <div className="flex flex-col gap-2">
-          <h4 className="font-bold text-xl">{name}</h4>
+          <h4 className="font-bold text-xl">{menu?.nama}</h4>
           <p className="text-md font-medium text-gray-700 max-w-[200px]">
-            {description}
+            {menu?.deskripsi}
           </p>
         </div>
         <p className="text-xl font-semibold">
-          Rp{price.toLocaleString("id-ID")}
+          Rp{menu?.harga.toLocaleString("id-ID")}
         </p>
       </div>
       <div className="w-full md:w-32 flex flex-col gap-4">
         <Image
-          src={image}
-          alt={name}
+          src={menu?.image_url || "/images/BackgroundHero.png"}
+          alt={menu?.nama}
           width={300}
           height={300}
           className="w-full md:w-32 h-32 object-cover rounded-xl"
@@ -47,4 +39,4 @@ const PopularMenuItem = ({
   );
 };
 
-export default PopularMenuItem;
+export default MenuItem;

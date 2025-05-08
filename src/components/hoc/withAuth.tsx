@@ -17,8 +17,8 @@ export interface WithAuthProps {
   user: User;
 }
 
-const USER_ROUTE = "/dashboard";
-const TENANT_ROUTE = "/tenant-dashboard";
+const USER_ROUTE = "/";
+const TENANT_ROUTE = "/dashboard";
 const LOGIN_ROUTE = "/login";
 
 export enum RouteRole {

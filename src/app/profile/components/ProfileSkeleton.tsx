@@ -5,7 +5,7 @@ export default function ProfileSkeleton() {
         <div className="h-8 w-64 bg-gray-200 rounded mb-6"></div>
 
         <div className="bg-white rounded-lg shadow-md p-6 space-y-6">
-          {[...Array(6)].map((_, i) => (
+          {[...Array(5)].map((_, i) => (
             <div
               key={i}
               className="flex justify-between items-center pb-4 border-b"

@@ -1,7 +1,27 @@
+"use client";
+
 import Button from "@/components/buttons/Button";
 import Image from "next/image";
 
 const Hero = () => {
+  const handleClick = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      let offset;
+      if (window.innerWidth < 768) {
+        offset = element.getBoundingClientRect().top + window.scrollY - 66;
+      } else if (window.innerWidth < 1280) {
+        offset = element.getBoundingClientRect().top + window.scrollY - 74;
+      } else {
+        offset = element.getBoundingClientRect().top + window.scrollY - 90;
+      }
+      window.scrollTo({
+        top: offset,
+        behavior: "smooth",
+      });
+    }
+  };
+
   return (
     <div className="relative w-full min-h-[100vh] flex items-center">
       {/* Background */}
@@ -33,6 +53,7 @@ const Hero = () => {
         <Button
           size="lg"
           className="w-fit bg-[#243E80] hover:bg-[#243E80] border-none hover:shadow-[#243E80] transition-all duration-300 p-4"
+          onClick={() => handleClick("tenants")}
         >
           Explore Menu
         </Button>

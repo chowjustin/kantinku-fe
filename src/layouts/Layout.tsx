@@ -10,7 +10,7 @@ export default function Layout({
   return (
     <>
       {withNavbar && <Navbar />}
-      {children}
+      <div className="pt-[3.5rem]">{children}</div>
       {withFooter && <Footer />}
     </>
   );
