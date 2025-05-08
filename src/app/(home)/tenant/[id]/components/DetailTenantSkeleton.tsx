@@ -4,8 +4,8 @@ import Layout from "@/layouts/Layout";
 
 export default function DetailTenantSkeleton() {
   return (
-    <Layout withNavbar withFooter={false}>
-      <div className="px-8 md:px-16 py-8 md:py-16 space-y-6">
+    <Layout withNavbar withFooter>
+      <div className="px-8 md:px-16 py-8 md:py-16 space-y-6 min-h-screen">
         {/* Tenant Header Skeleton */}
         <div className="flex flex-col md:flex-row gap-4">
           <div className="w-full md:w-64 h-40 rounded-lg bg-gray-200 animate-pulse" />

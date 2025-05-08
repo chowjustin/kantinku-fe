@@ -12,6 +12,7 @@ import { useGetMe } from "@/app/hooks/useGetMe";
 import ProfileSkeleton from "@/app/profile/components/ProfileSkeleton";
 import { removeToken } from "@/lib/cookies";
 import { useRouter } from "next/navigation";
+import formatISOToDayMonthYear from "@/app/utils/dateUtils";
 
 interface ModalState {
   nama: boolean;
@@ -22,7 +23,7 @@ interface ModalState {
 }
 
 export default function ProfileContainer() {
-  const { user: storedUser } = useAuthStore();
+  const { user: storedUser, logout } = useAuthStore();
 
   const isTenant = storedUser?.role === "tenant";
   const router = useRouter();
@@ -55,9 +56,9 @@ export default function ProfileContainer() {
   }
 
   return (
-    <section className="p-12 max-md:p-6 space-y-6 px-[5%]">
+    <section className="p-12 min-h-screen max-md:p-6 space-y-6 px-[5%]">
       <div>
-        <h1 className="text-3xl font-semibold max-md:text-2xl">Profile Page</h1>
+        <h1 className="text-3xl font-semibold max-md:text-2xl">Profil Kamu</h1>
       </div>
 
       <div className="bg-white rounded-lg shadow-md p-6">
@@ -88,7 +89,7 @@ export default function ProfileContainer() {
 
           <ProfileField
             label="Tanggal Dibuat"
-            value={user?.created_at}
+            value={formatISOToDayMonthYear(user?.created_at || "")}
             canEdit={false}
           />
 
@@ -104,6 +105,7 @@ export default function ProfileContainer() {
             <Button
               onClick={() => {
                 removeToken();
+                logout();
                 router.push("/login");
               }}
               variant="outline"

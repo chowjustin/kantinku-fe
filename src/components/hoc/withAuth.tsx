@@ -37,7 +37,11 @@ const hasAccess = (
     case "student":
       return routeRole === "student" || routeRole === "public";
     case "tenant":
-      return routeRole === "tenant" || routeRole === "public";
+      return (
+        routeRole === "tenant" ||
+        routeRole === "student" ||
+        routeRole === "public"
+      );
 
     default:
       return false;

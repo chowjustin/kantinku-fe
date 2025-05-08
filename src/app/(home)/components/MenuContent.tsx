@@ -124,12 +124,15 @@ const MenuContent = () => {
               </div>
 
               {/* Text */}
-              <div className="flex flex-col gap-1 pt-3 px-2">
-                <h4 className="text-base sm:text-lg md:text-xl lg:text-2xl text-center font-bold">
+              <div className="flex flex-col gap-1 px-2">
+                <h4 className="text-base sm:text-lg md:text-xl lg:text-xl text-center font-bold">
                   {tenant.nama_tenant}
                 </h4>
-                <p className="text-xs sm:text-sm md:text-base lg:text-lg text-center font-medium text-gray-700">
-                  {/*{tenant.departement}*/}
+                <p className="text-xs sm:text-sm md:text-base lg:text-md text-center font-medium text-gray-900">
+                  {tenant.nama_kantin}
+                </p>
+                <p className="text-xs sm:text-sm text-center font-medium text-gray-700">
+                  {tenant.departement}
                 </p>
               </div>
             </div>

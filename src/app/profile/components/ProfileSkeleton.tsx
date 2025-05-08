@@ -1,6 +1,6 @@
 export default function ProfileSkeleton() {
   return (
-    <section className="p-12 max-md:py-4 max-lg:px-0 space-y-6">
+    <section className="p-12 max-md:py-4 max-lg:px-0 space-y-6 min-h-screen">
       <div className="animate-pulse">
         <div className="h-8 w-64 bg-gray-200 rounded mb-6"></div>
 

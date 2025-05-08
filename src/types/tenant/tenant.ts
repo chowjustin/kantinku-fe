@@ -8,4 +8,8 @@ export type Tenant = {
   nomor_telepon: string;
   created_at: string;
   image_url: string | null;
+  nama_kantin: string;
+  departement: string;
+  latitude: string;
+  longitude: string;
 };

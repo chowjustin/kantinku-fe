@@ -9,8 +9,11 @@ import { Menu } from "@/types/tenant/menu";
 import LocationsModal from "@/components/maps/LocationsModal";
 import { useState } from "react";
 import DetailTenantSkeleton from "@/app/(home)/tenant/[id]/components/DetailTenantSkeleton";
+import withAuth from "@/components/hoc/withAuth";
 
-export default function DetailTenant() {
+export default withAuth(DetailTenant, "student");
+
+function DetailTenant() {
   const pathname = usePathname();
   const id = pathname.split("/").pop();
 
@@ -36,7 +39,7 @@ export default function DetailTenant() {
 
   return (
     <>
-      <Layout withNavbar withFooter={false}>
+      <Layout withNavbar withFooter>
         <div className="px-8 md:px-16 py-8 md:py-16 space-y-6">
           <div className="flex flex-col md:flex-row gap-4">
             <Image
