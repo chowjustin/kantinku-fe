@@ -10,7 +10,7 @@ export default function Layout({
   return (
     <>
       {withNavbar && <Navbar />}
-      <div className="pt-[3.5rem]">{children}</div>
+      <div className="pt-[3.5rem] min-h-screen">{children}</div>
       {withFooter && <Footer />}
     </>
   );

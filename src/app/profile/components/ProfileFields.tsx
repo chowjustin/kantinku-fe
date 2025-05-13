@@ -5,14 +5,18 @@ export default function ProfileField({
   value,
   onEdit,
   canEdit = true,
+  className,
 }: {
   label: string;
   value?: string;
   onEdit?: () => void;
   canEdit?: boolean;
+  className?: string;
 }) {
   return (
-    <div className="flex justify-between items-center pb-4 border-b gap-4">
+    <div
+      className={`flex justify-between items-center pb-4 border-b gap-4 ${className}`}
+    >
       <div className="min-w-0 flex-1">
         {" "}
         {/* This ensures the text container can shrink */}

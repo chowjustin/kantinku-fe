@@ -3,10 +3,12 @@ export type User = {
   nama: string;
   email: string;
   nomor_telepon: string;
-  password: string;
   nrp: string;
   created_at: string;
   role: string;
+  canteen_id: string;
+  nama_tenant: string;
+  image_url: string;
 };
 
 export type UpdateUserRequest = {

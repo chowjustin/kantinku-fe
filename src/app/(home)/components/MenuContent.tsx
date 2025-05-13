@@ -4,80 +4,16 @@ import Image from "next/image";
 import Link from "next/link";
 import useGetAllTenants from "@/app/hooks/useGetAllTenants";
 import { Tenant } from "@/types/tenant/tenant";
-
-type Canteen = {
-  id: string;
-  departement: string;
-  nama: string;
-};
-
-const dummyCanteens = [
-  {
-    id: "1",
-    departement: "Teknik Informatika",
-    nama: "Kantin TC",
-  },
-  {
-    id: "2",
-    departement: "Teknik Elektro",
-    nama: "Kantin Volt",
-  },
-  {
-    id: "3",
-    departement: "Teknik Mesin",
-    nama: "Kantin Gear",
-  },
-  {
-    id: "4",
-    departement: "Teknik Sipil",
-    nama: "Kantin Beton",
-  },
-  {
-    id: "5",
-    departement: "Teknik Informatika",
-    nama: "Kantin TC",
-  },
-  {
-    id: "6",
-    departement: "Teknik Elektro",
-    nama: "Kantin Volt",
-  },
-  {
-    id: "7",
-    departement: "Teknik Mesin",
-    nama: "Kantin Gear",
-  },
-  {
-    id: "8",
-    departement: "Teknik Sipil",
-    nama: "Kantin Beton",
-  },
-  {
-    id: "9",
-    departement: "Teknik Informatika",
-    nama: "Kantin TC",
-  },
-  {
-    id: "10",
-    departement: "Teknik Elektro",
-    nama: "Kantin Volt",
-  },
-  {
-    id: "11",
-    departement: "Teknik Mesin",
-    nama: "Kantin Gear",
-  },
-  {
-    id: "12",
-    departement: "Teknik Sipil",
-    nama: "Kantin Beton",
-  },
-];
+import MenuContentSkeleton from "@/app/(home)/components/MenuContentSkeleton";
 
 const MenuContent = () => {
   const { data, isLoading } = useGetAllTenants();
 
   const tenantData = data?.data || [];
+
+  if (isLoading) {
+    return <MenuContentSkeleton />;
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">

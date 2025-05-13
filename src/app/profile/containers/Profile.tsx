@@ -20,6 +20,9 @@ interface ModalState {
   email: boolean;
   nomor_telepon: boolean;
   password: boolean;
+  canteen_id: boolean;
+  nama_tenant: boolean;
+  image_url: boolean;
 }
 
 export default function ProfileContainer() {
@@ -34,6 +37,9 @@ export default function ProfileContainer() {
     email: false,
     nomor_telepon: false,
     password: false,
+    canteen_id: false,
+    nama_tenant: false,
+    image_url: false,
   });
 
   const { data: user, isLoading: isGetMeLoading } = useGetMe({
@@ -73,6 +79,14 @@ export default function ProfileContainer() {
             label="NRP"
             value={user?.nrp || ""}
             onEdit={() => toggleModal("nrp", true)}
+            className={user?.role === "tenant" ? "hidden" : ""}
+          />
+
+          <ProfileField
+            label="Nama Tenant"
+            value={user?.nama_tenant || ""}
+            onEdit={() => toggleModal("nama_tenant", true)}
+            className={user?.role === "tenant" ? "" : "hidden"}
           />
 
           <ProfileField
@@ -136,6 +150,17 @@ export default function ProfileContainer() {
         label="Edit NRP"
         currentValue={user?.nrp || ""}
         fieldName="username"
+        mutate={updateUserMutation}
+        isPending={updateUserPending}
+      />
+
+      <EditModal
+        isOpen={openModals.nama_tenant}
+        setIsOpen={(isOpen) => toggleModal("nama_tenant", isOpen)}
+        id="nama_tenant"
+        label="Edit Nama Tenant"
+        currentValue={user?.nama_tenant || ""}
+        fieldName="nama_tenant"
         mutate={updateUserMutation}
         isPending={updateUserPending}
       />

@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import { CircleUser, Menu, Search, X } from "lucide-react";
+import { CircleUser, LayoutDashboard, Menu, Search, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import ButtonLink from "@/components/links/ButtonLink";
 import UnstyledLink from "@/components/links/UnstyledLink";
@@ -9,6 +9,7 @@ import { getToken } from "@/lib/cookies";
 import clsxm from "@/lib/clsxm";
 import Link from "next/link";
 import Button from "@/components/buttons/Button";
+import useAuthStore from "@/app/stores/useAuthStore";
 
 const links = [{ href: "/", label: "" }];
 
@@ -16,6 +17,8 @@ export default function Navbar() {
   const token = getToken();
   const [isLogin, setIsLogin] = React.useState<boolean>(false);
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
+
+  const { user } = useAuthStore();
 
   const pathname = usePathname();
 
@@ -96,7 +99,7 @@ export default function Navbar() {
                   >
                     Login
                   </ButtonLink>
-                ) : (
+                ) : user?.role === "student" ? (
                   <ButtonLink
                     variant="primary"
                     href="/profile"
@@ -105,6 +108,16 @@ export default function Navbar() {
                     leftIcon={CircleUser}
                   >
                     Profile
+                  </ButtonLink>
+                ) : (
+                  <ButtonLink
+                    variant="primary"
+                    href="/dashboard"
+                    size="sm"
+                    className="text-sm px-2 py-1 font-normal text-white md:leading-none"
+                    leftIcon={LayoutDashboard}
+                  >
+                    Dashboard
                   </ButtonLink>
                 )}
               </div>
@@ -180,7 +193,7 @@ export default function Navbar() {
                 Login
               </ButtonLink>
             </>
-          ) : (
+          ) : user?.role === "student" ? (
             <ButtonLink
               variant="primary"
               size="sm"
@@ -189,6 +202,16 @@ export default function Navbar() {
               leftIcon={CircleUser}
             >
               Profile
+            </ButtonLink>
+          ) : (
+            <ButtonLink
+              variant="primary"
+              size="sm"
+              href="/dashboard"
+              className="text-lg font-normal text-white md:leading-none"
+              leftIcon={LayoutDashboard}
+            >
+              Dashboard
             </ButtonLink>
           )}
         </div>
