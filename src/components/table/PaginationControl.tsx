@@ -79,8 +79,8 @@ export default function PaginationControl<T extends RowData>({
       <div className="flex items-center gap-1">
         <Button
           className={clsxm(
-            "flex min-w-[30px] justify-center rounded-md !border-none !p-2 !font-semibold bg-primary-base",
-            "disabled:cursor-not-allowed hover:bg-primary-hover",
+            "flex min-w-[30px] justify-center rounded-md !border-none !p-2 !font-semibold bg-blue-500",
+            "disabled:cursor-not-allowed hover:bg-primary-hover disabled:bg-gray-300",
           )}
           disabled={currentPage <= 1}
           onClick={() => {
@@ -103,8 +103,8 @@ export default function PaginationControl<T extends RowData>({
           <Button
             key={index}
             className={clsxm(
-              "flex min-w-[38px] justify-center rounded-md border-2 border-primary-base bg-white !p-2 !font-semibold text-primary-base drop-shadow-sm hover:bg-primary-hover",
-              currentPage === pageIndex && "bg-primary-base text-white",
+              "flex min-w-[38px] justify-center rounded-md border-2 border-primary-main bg-white !p-2 !font-semibold text-primary-main drop-shadow-sm hover:bg-primary-hover",
+              currentPage === pageIndex && "bg-primary-main text-white",
             )}
             onClick={() => {
               const pageNumber = pageIndex as number;
@@ -121,7 +121,7 @@ export default function PaginationControl<T extends RowData>({
         <Button
           className={clsxm(
             "flex min-w-[30px] justify-center rounded-md !border-none !p-2 !font-semibold text-white drop-shadow-sm ",
-            "disabled:cursor-not-allowed bg-primary-base hover:bg-primary-hover",
+            "disabled:cursor-not-allowed bg-blue-500 hover:bg-primary-hover disabled:bg-gray-300",
           )}
           disabled={currentPage >= pageCount}
           onClick={() => {

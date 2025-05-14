@@ -1,31 +1,63 @@
 "use client";
 
 import { Dialog, Transition } from "@headlessui/react";
+import * as React from "react";
 import { Fragment } from "react";
 import Button from "@/components/buttons/Button";
+import { FormProvider, useForm } from "react-hook-form";
+import useCreateMenuMutation, {
+  CreateMenuRequest,
+} from "@/app/hooks/useCreateMenuMutation";
+import Input from "@/components/form/Input";
+import TextArea from "@/components/form/TextArea";
+import { Menu } from "@/types/tenant/menu";
+import useEditMenuMutation from "@/app/hooks/useEditMenuMutation";
 
 interface AddMenuModalProps {
   isOpen: boolean;
+  isEditing?: boolean;
+  menuData?: Menu;
   onClose: () => void;
-  formData: {
-    nama: string;
-    deskripsi: string;
-    harga: number;
-    stok: number;
-  };
-  onChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => void;
-  onSubmit: () => void;
 }
 
 export default function AddMenuModal({
   isOpen,
+  isEditing = false,
+  menuData,
   onClose,
-  formData,
-  onChange,
-  onSubmit,
 }: AddMenuModalProps) {
+  const methods = useForm<CreateMenuRequest>({
+    mode: "onChange",
+  });
+
+  const { handleSubmit, reset, setValue } = methods;
+
+  const createMutation = useCreateMenuMutation({ onClose, reset });
+  const updateMutation = useEditMenuMutation({
+    id: menuData?.id || "",
+    onClose,
+    reset,
+  });
+
+  const isPending = createMutation.isPending || updateMutation.isPending;
+
+  React.useEffect(() => {
+    if (isEditing && menuData) {
+      setValue("nama", menuData.nama);
+      setValue("deskripsi", menuData.deskripsi);
+      setValue("harga", menuData.harga);
+      setValue("stok", menuData.stok);
+    }
+  }, [isEditing, menuData, setValue, reset]);
+
+  const onSubmit = (data: CreateMenuRequest) => {
+    if (isEditing && menuData) {
+      updateMutation.mutate(data);
+    } else {
+      createMutation.mutate(data);
+    }
+  };
+
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={onClose}>
@@ -57,49 +89,69 @@ export default function AddMenuModal({
                   as="h3"
                   className="text-lg font-medium leading-6 text-gray-900"
                 >
-                  Tambah Menu
+                  {isEditing ? "Edit Menu " : "Tambah Menu"}
                 </Dialog.Title>
 
-                <div className="mt-4 space-y-4">
-                  <input
-                    type="text"
-                    name="nama"
-                    value={formData.nama}
-                    onChange={onChange}
-                    placeholder="Nama"
-                    className="w-full border rounded px-3 py-2"
-                  />
-                  <textarea
-                    name="deskripsi"
-                    value={formData.deskripsi}
-                    onChange={onChange}
-                    placeholder="Deskripsi"
-                    className="w-full border rounded px-3 py-2"
-                  />
-                  <input
-                    type="number"
-                    name="harga"
-                    value={formData.harga}
-                    onChange={onChange}
-                    placeholder="Harga"
-                    className="w-full border rounded px-3 py-2"
-                  />
-                  <input
-                    type="number"
-                    name="stok"
-                    value={formData.stok}
-                    onChange={onChange}
-                    placeholder="Stok"
-                    className="w-full border rounded px-3 py-2"
-                  />
-                </div>
-
-                <div className="mt-6 flex justify-end gap-2">
-                  <Button onClick={onClose} className="bg-gray-200 text-black">
-                    Batal
-                  </Button>
-                  <Button onClick={onSubmit}>Simpan</Button>
-                </div>
+                <FormProvider {...methods}>
+                  <form onSubmit={handleSubmit(onSubmit)}>
+                    <div className="mt-4 space-y-4">
+                      <Input
+                        id="nama"
+                        type="text"
+                        label="Nama Makanan"
+                        placeholder="Masukkan nama makanan"
+                        validation={{
+                          required: "Nama makanan harus diisi",
+                        }}
+                      />
+                      <TextArea
+                        id="deskripsi"
+                        label="Deskripsi Makanan"
+                        placeholder="Masukkan deskripsi makanan"
+                        validation={{
+                          required: "Deskripsi makanan harus diisi",
+                        }}
+                      />
+                      <Input
+                        id="harga"
+                        type="number"
+                        label="Harga Makanan"
+                        prefix="Rp. "
+                        min={"0"}
+                        placeholder="Masukkan harga makanan"
+                        validation={{
+                          required: "Harga makanan harus diisi",
+                          valueAsNumber: true,
+                        }}
+                      />
+                      <Input
+                        id="stok"
+                        type="number"
+                        label="Stok Makanan"
+                        placeholder="Masukkan stok makanan"
+                        min={"0"}
+                        validation={{
+                          required: "Stok makanan harus diisi",
+                          valueAsNumber: true,
+                        }}
+                      />
+                    </div>
+                    <div className="mt-6 flex justify-end gap-2">
+                      <Button
+                        className="bg-gray-200 text-black"
+                        onClick={() => {
+                          onClose();
+                          reset();
+                        }}
+                      >
+                        Batal
+                      </Button>
+                      <Button type="submit" isLoading={isPending}>
+                        Simpan
+                      </Button>
+                    </div>
+                  </form>
+                </FormProvider>
               </Dialog.Panel>
             </Transition.Child>
           </div>
