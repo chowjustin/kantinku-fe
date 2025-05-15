@@ -14,8 +14,11 @@ import {
   XCircle,
 } from "lucide-react";
 import { useCheckoutMutation, useOrderStatus } from "@/app/hooks/orderHooks";
+import withAuth from "@/components/hoc/withAuth";
 
-export default function CheckoutPage() {
+export default withAuth(CheckoutPage, "student");
+
+function CheckoutPage() {
   const methods = useForm({ mode: "onChange" });
   const {
     items,
@@ -85,7 +88,7 @@ export default function CheckoutPage() {
       {
         onSuccess: (data) => {
           if (data.status && data.data) {
-            setOrderId(data.data.token);
+            setOrderId(data.data.id.toString());
             setPaymentUrl(data.data.redirect_url);
             setPaymentStatus(data.data.payment_status);
           }

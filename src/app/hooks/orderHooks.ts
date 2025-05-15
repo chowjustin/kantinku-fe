@@ -59,7 +59,7 @@ export function useOrderStatus(orderId: string | null) {
     queryKey: ["order-status", orderId],
     queryFn: async () => {
       if (!orderId) return null;
-      const response = await api.get(`/order/status/${orderId}`);
+      const response = await api.get(`/order/${orderId}`);
       return response.data;
     },
     enabled: !!orderId,

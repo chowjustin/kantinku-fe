@@ -9,12 +9,9 @@ import { Menu } from "@/types/tenant/menu";
 import LocationsModal from "@/components/maps/LocationsModal";
 import { useState } from "react";
 import DetailTenantSkeleton from "@/app/(home)/tenant/[id]/components/DetailTenantSkeleton";
-import withAuth from "@/components/hoc/withAuth";
 import CartFooter from "@/layouts/CartFooter";
 
-export default withAuth(DetailTenant, "student");
-
-function DetailTenant() {
+export default function DetailTenant() {
   const pathname = usePathname();
   const id = pathname.split("/").pop();
 

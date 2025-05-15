@@ -1,214 +1,239 @@
 "use client";
 import React, { useState } from "react";
-import {
-  ColumnDef,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 import Table from "@/components/table/Table";
-import THead from "@/components/table/THead";
-import TBody from "@/components/table/TBody";
-import Filter from "@/components/table/Filter";
-import PaginationControl from "@/components/table/PaginationControl";
-import Button from "@/components/buttons/Button";
+import withAuth from "@/components/hoc/withAuth";
+import useAuthStore from "@/app/stores/useAuthStore";
+import { useGetTenantQueue } from "@/app/hooks/useGetTenantQueue";
+import SelectInput from "@/components/form/SelectInput";
+import api from "@/lib/api";
+import { FormProvider, useForm } from "react-hook-form";
+import ConfirmationModal from "@/components/form/ConfirmationModal";
+import formatISOToDayMonthYear from "@/app/utils/dateUtils";
 
-interface Linkable {
-  href?: string;
+interface MenuItem {
+  menu: string;
+  quantity: number;
 }
 
-interface Antrian extends Linkable {
-  id: number;
-  pesanan: string;
+interface OrderData {
+  orderId: number;
+  pesanan: MenuItem[];
+  pesananDisplay: string;
   notes: string;
   pemesan: string;
   createdAt: string;
-  status: boolean;
+  createdAtDisplay: string;
+  status: string;
 }
 
-const defaultData: Antrian[] = [
-  {
-    id: 1,
-    pesanan: "Bakwan",
-    notes: "bumbunya dipisah",
-    pemesan: "warga",
-    createdAt: "08-05-2025",
-    status: true,
-  },
-  {
-    id: 2,
-    pesanan: "Bakwan",
-    notes: "bumbunya dipisah",
-    pemesan: "warga",
-    createdAt: "08-05-2025",
-    status: true,
-  },
-  {
-    id: 3,
-    pesanan: "Bakwan",
-    notes: "bumbunya dipisah",
-    pemesan: "warga",
-    createdAt: "08-05-2025",
-    status: true,
-  },
-  {
-    id: 4,
-    pesanan: "Bakwan",
-    notes: "bumbunya dipisah",
-    pemesan: "warga",
-    createdAt: "08-05-2025",
-    status: true,
-  },
-  {
-    id: 5,
-    pesanan: "Bakwan",
-    notes: "bumbunya dipisah",
-    pemesan: "warga",
-    createdAt: "08-05-2025",
-    status: true,
-  },
-  {
-    id: 6,
-    pesanan: "Bakwan",
-    notes: "bumbunya dipisah",
-    pemesan: "warga",
-    createdAt: "08-05-2025",
-    status: true,
-  },
-  {
-    id: 7,
-    pesanan: "Bakwan",
-    notes: "bumbunya dipisah",
-    pemesan: "warga",
-    createdAt: "08-05-2025",
-    status: true,
-  },
-  {
-    id: 8,
-    pesanan: "Bakwan",
-    notes: "bumbunya dipisah",
-    pemesan: "warga",
-    createdAt: "08-05-2025",
-    status: true,
-  },
-  {
-    id: 9,
-    pesanan: "Bakwan",
-    notes: "bumbunya dipisah",
-    pemesan: "warga",
-    createdAt: "08-05-2025",
-    status: true,
-  },
-  {
-    id: 10,
-    pesanan: "Bakwan",
-    notes: "bumbunya dipisah",
-    pemesan: "warga",
-    createdAt: "08-05-2025",
-    status: true,
-  },
-  {
-    id: 11,
-    pesanan: "Bakwan",
-    notes: "bumbunya dipisah",
-    pemesan: "warga",
-    createdAt: "08-05-2025",
-    status: true,
-  },
-  {
-    id: 12,
-    pesanan: "Bakwan",
-    notes: "bumbunya dipisah",
-    pemesan: "warga",
-    createdAt: "08-05-2025",
-    status: true,
-  },
+interface QueueItem {
+  orderId: number;
+  notes: string | null;
+  createdAt: string;
+  pemesan: string;
+  pesanan: MenuItem[];
+  status?: string;
+}
+
+const STATUS_OPTIONS = [
+  { value: "pending", label: "Pending" },
+  { value: "processing", label: "Processing" },
+  { value: "ready", label: "Ready" },
+  { value: "completed", label: "Completed" },
+  { value: "rejected", label: "Rejected" },
 ];
 
-export default function QueueTable() {
-  const [data, setData] = React.useState<Antrian[]>(defaultData);
-  const [params, setParams] = useState({ page: 1, size: 10 });
+const STATUS_COLORS: Record<string, string> = {
+  pending: "bg-yellow-100 text-yellow-800",
+  processing: "bg-blue-100 text-blue-800",
+  ready: "bg-green-100 text-green-800",
+  completed: "bg-gray-100 text-gray-800",
+  rejected: "bg-red-100 text-red-800",
+};
 
-  const columns: ColumnDef<Antrian>[] = [
-    {
-      accessorKey: "id",
-      header: "Nomor",
-    },
-    {
-      accessorKey: "pesanan",
-      header: "Pesanan",
-    },
-    {
-      accessorKey: "notes",
-      header: "Notes",
-    },
-    {
-      accessorKey: "pemesan",
-      header: "Pemesan",
-    },
-    {
-      accessorKey: "createdAt",
-      header: "Created At",
-    },
-    {
-      id: "aksi",
-      header: "Aksi",
-      cell: ({ row }) => (
-        <Button
-          size="base"
-          className={
-            row.original.status
-              ? `bg-[#243E80] border-none text-white hover:bg-[#013880]`
-              : `bg-zinc-100 border-none text-black hover:text-black hover:bg-zinc-100 cursor-not-allowed`
-          }
-          onClick={() => {
-            if (row.original.status) {
-              handleReserved(row.original.id);
-            }
-          }}
-        >
-          Selesai
-        </Button>
-      ),
-    },
-  ];
+const formatPesanan = (pesanan: MenuItem[] | undefined): string => {
+  if (!pesanan || !Array.isArray(pesanan)) return "-";
 
-  const table = useReactTable({
-    data: data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
+  return pesanan.map((item) => `${item.menu} - ${item.quantity}`).join("\n");
+};
+
+export default withAuth(QueueTable, "tenant");
+
+function QueueTable() {
+  const { user } = useAuthStore();
+  const queryClient = useQueryClient();
+  const [modalState, setModalState] = useState({
+    isOpen: false,
+    orderId: null as number | null,
+    newStatus: "",
+    message: "",
   });
 
-  function handleReserved(id: number) {
-    setData((prevData) =>
-      prevData.map((menu) =>
-        menu.id === id ? { ...menu, status: false } : menu,
-      ),
-    );
-  }
+  const { data: queueData, isPending: isLoadingQueue } = useGetTenantQueue({
+    id: user?.id!,
+  });
+
+  const orderData = React.useMemo(() => {
+    if (!queueData || !Array.isArray(queueData)) return [];
+
+    return queueData.map((order: QueueItem) => ({
+      orderId: order.orderId,
+      pesanan: order.pesanan,
+      pesananDisplay: formatPesanan(order.pesanan),
+      notes: order.notes || "-",
+      pemesan: order.pemesan,
+      createdAt: order.createdAt,
+      createdAtDisplay: formatISOToDayMonthYear(order.createdAt),
+      status: order.status || "pending",
+    }));
+  }, [queueData]);
+
+  const methods = useForm();
+
+  const updateStatusMutation = useMutation({
+    mutationFn: async ({
+      orderId,
+      status,
+    }: { orderId: number; status: string }) => {
+      return await api.patch(`/order/${orderId}`, { order_status: status });
+    },
+    onSuccess: () => {
+      toast.success("Status pesanan berhasil diupdate!");
+      queryClient.invalidateQueries({ queryKey: ["tenant-queue", user?.id] });
+      closeModal();
+    },
+    onError: (error: any) => {
+      toast.error(error?.message || "Gagal mengupdate status pesanan!");
+    },
+  });
+
+  const openModal = (orderId: number, newStatus: string) => {
+    const statusLabel =
+      STATUS_OPTIONS.find((opt) => opt.value === newStatus)?.label || newStatus;
+
+    setModalState({
+      isOpen: true,
+      orderId,
+      newStatus,
+      message: `Apakah Anda yakin ingin mengubah status pesanan #${orderId} menjadi ${statusLabel}?`,
+    });
+  };
+
+  const closeModal = () => {
+    setModalState({
+      isOpen: false,
+      orderId: null,
+      newStatus: "",
+      message: "",
+    });
+  };
+
+  const handleSubmitStatusChange = () => {
+    const { orderId, newStatus } = modalState;
+    if (orderId && newStatus) {
+      updateStatusMutation.mutate({ orderId, status: newStatus });
+    }
+  };
+
+  const columns = React.useMemo<ColumnDef<OrderData>[]>(
+    () => [
+      {
+        accessorKey: "orderId",
+        header: "No. Order",
+      },
+      {
+        accessorKey: "pesananDisplay",
+        header: "Pesanan",
+        cell: ({ row }) => (
+          <div className="whitespace-pre-line">
+            {row.original.pesananDisplay}
+          </div>
+        ),
+      },
+      {
+        accessorKey: "notes",
+        header: "Notes",
+      },
+      {
+        accessorKey: "pemesan",
+        header: "Pemesan",
+      },
+      {
+        accessorKey: "createdAtDisplay",
+        header: "Waktu Pesan",
+      },
+      {
+        accessorKey: "status",
+        header: "Status",
+        cell: ({ row }) => {
+          const status = row.original.status;
+          return (
+            <div
+              className={`px-2 py-1 rounded-md text-xs font-medium inline-block ${STATUS_COLORS[status] || "bg-gray-100"}`}
+            >
+              {STATUS_OPTIONS.find((opt) => opt.value === status)?.label ||
+                status}
+            </div>
+          );
+        },
+      },
+      {
+        id: "aksi",
+        header: "Aksi",
+        cell: ({ row }) => (
+          <FormProvider {...methods}>
+            <SelectInput
+              id={`status-${row.original.orderId}`}
+              label={null}
+              placeholder="Ubah Status"
+              options={STATUS_OPTIONS}
+              containerClassName="w-fit mx-auto"
+              onChange={(selectedOption: any) => {
+                const newStatus = selectedOption?.value;
+                if (newStatus && newStatus !== row.original.status) {
+                  openModal(row.original.orderId, newStatus);
+                }
+              }}
+              value={row.original.status}
+              hideError={true}
+            />
+          </FormProvider>
+        ),
+      },
+    ],
+    [],
+  );
 
   return (
     <div className="flex flex-col gap-4">
-      <Filter
-        className="w-full md:w-fit"
-        table={table}
-        placeholder="Cari menu"
-      />
+      {isLoadingQueue ? (
+        <div className="text-center py-8">Memuat data pesanan...</div>
+      ) : (
+        <Table
+          data={orderData}
+          columns={columns}
+          withFilter={true}
+          withPaginationControl={true}
+          withEntries={true}
+          isLoading={isLoadingQueue}
+          tableClassName="max-h-[calc(100vh-300px)]"
+        />
+      )}
 
-      <Table columns={columns} data={data}>
-        <THead table={table} omitSort={true} />
-        <TBody<Antrian> table={table} />
-      </Table>
-
-      <PaginationControl
-        className="self-end"
-        data={data}
-        table={table}
-        setParams={setParams}
+      {/* Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={modalState.isOpen}
+        message={modalState.message}
+        onClose={closeModal}
+        onSubmit={handleSubmitStatusChange}
+        isLoading={updateStatusMutation.isPending}
+        title="Konfirmasi Perubahan Status"
+        confirmText="Ya, Ubah Status"
+        cancelText="Batal"
       />
     </div>
   );
