@@ -6,6 +6,7 @@ import {
   QueryOptions,
 } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
+import { CartProvider } from "@/context/CartContext";
 
 import api from "@/lib/api";
 
@@ -25,7 +26,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
       <Toaster position="top-center" />
-      {children}
+      <CartProvider>{children}</CartProvider>
     </QueryClientProvider>
   );
 }

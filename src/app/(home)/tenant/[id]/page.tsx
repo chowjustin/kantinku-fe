@@ -10,6 +10,7 @@ import LocationsModal from "@/components/maps/LocationsModal";
 import { useState } from "react";
 import DetailTenantSkeleton from "@/app/(home)/tenant/[id]/components/DetailTenantSkeleton";
 import withAuth from "@/components/hoc/withAuth";
+import CartFooter from "@/layouts/CartFooter";
 
 export default withAuth(DetailTenant, "student");
 
@@ -73,11 +74,16 @@ function DetailTenant() {
             <h3 className="text-2xl font-semibold mb-4">Daftar Menu</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {menus.map((item: Menu) => (
-                <MenuItem key={item.id} menu={item} />
+                <MenuItem
+                  key={item.id}
+                  menu={item}
+                  tenantName={tenantData?.nama_tenant || ""}
+                />
               ))}
             </div>
           </div>
         </div>
+        <CartFooter />
       </Layout>
       <LocationsModal
         isOpen={isModalOpen}

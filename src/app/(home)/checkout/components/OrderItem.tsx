@@ -1,24 +1,15 @@
-"use client";
+import { CartItem } from "@/context/CartContext";
+import { useState } from "react";
+import { Minus, Plus, X } from "lucide-react";
 import Image from "next/image";
-import Input from "@/components/form/Input";
-import IconButton from "@/components/buttons/IconButton";
-import { Minus, Plus, Trash2 } from "lucide-react";
-import { FormProvider } from "react-hook-form";
 
 type Props = {
-  order: {
-    id: number;
-    name: string;
-    price: number;
-    quantity: number;
-    note: string;
-    imageUrl: string;
-  };
+  order: CartItem;
   methods: any;
-  onIncrement: (id: number) => void;
-  onDecrement: (id: number) => void;
-  onDelete: (id: number) => void;
-  onNoteChange: (id: number, note: string) => void;
+  onIncrement: (id: number | string) => void;
+  onDecrement: (id: number | string) => void;
+  onDelete: (id: number | string) => void;
+  onNoteChange: (id: number | string, note: string) => void;
 };
 
 export default function OrderItem({
@@ -29,64 +20,95 @@ export default function OrderItem({
   onDelete,
   onNoteChange,
 }: Props) {
+  const [showNoteInput, setShowNoteInput] = useState(false);
+  const [noteText, setNoteText] = useState(order.note || "");
+
+  const handleNoteChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setNoteText(e.target.value);
+    onNoteChange(order.id, e.target.value);
+  };
+
   return (
-    <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8">
-      <div className="flex items-start gap-3 w-full">
-        <div className="flex h-[90px] w-[80px] shrink-0 items-center justify-center overflow-hidden rounded-xl">
-          <Image
-            src={order.imageUrl}
-            alt={order.name}
-            className="h-full w-full object-cover"
-            width={40}
-            height={40}
-          />
-        </div>
+    <div className="flex flex-col gap-3">
+      <div className="flex items-start gap-4">
+        <Image
+          src={order.imageUrl}
+          alt={order.name}
+          width={64}
+          height={64}
+          className="h-16 w-16 rounded-lg object-cover"
+        />
 
-        <div className="flex flex-col gap-1 w-full">
-          <h3 className="text-sm font-semibold">{order.name}</h3>
+        <div className="flex flex-1 flex-col">
+          <div className="flex items-start justify-between">
+            <h3 className="font-medium">{order.name}</h3>
+            <button
+              onClick={() => onDelete(order.id)}
+              className="text-gray-500 hover:text-gray-700"
+            >
+              <X size={16} />
+            </button>
+          </div>
 
-          <p className="text-sm font-medium">
-            Rp {order.price.toLocaleString()}
-          </p>
+          <p className="font-medium">Rp {order.price.toLocaleString()}</p>
 
-          <FormProvider {...methods}>
-            <Input
-              id={`notes-${order.id}`}
-              placeholder="masukkan catatan pesanan"
-              value={order.note}
-              onChange={(e) => onNoteChange(order.id, e.target.value)}
-              className="w-full"
-            />
-          </FormProvider>
+          {order.note && !showNoteInput && (
+            <div className="mt-1 flex gap-2">
+              <p className="text-sm text-gray-500">Catatan: {order.note}</p>
+              <button
+                onClick={() => setShowNoteInput(true)}
+                className="text-sm text-blue-500 hover:underline"
+              >
+                Ubah
+              </button>
+            </div>
+          )}
+
+          {showNoteInput ? (
+            <div className="mt-2 flex flex-col gap-2">
+              <textarea
+                value={noteText}
+                onChange={handleNoteChange}
+                placeholder="Tambahkan catatan untuk pesanan ini..."
+                className="w-full rounded-md border border-gray-300 p-2 text-sm"
+                rows={2}
+              />
+              <div className="flex justify-end">
+                <button
+                  onClick={() => setShowNoteInput(false)}
+                  className="text-sm font-medium text-blue-500 hover:text-blue-600"
+                >
+                  Simpan
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              onClick={() => setShowNoteInput(true)}
+              className="mt-1 w-fit text-sm text-blue-500 hover:underline"
+            >
+              {order.note ? "Ubah catatan" : "Tambah catatan"}
+            </button>
+          )}
         </div>
       </div>
 
-      <div className="flex md:flex-col md:items-end justify-between gap-4 w-full md:w-fit">
-        <div className="flex gap-4 items-center">
-          <IconButton
-            size="sm"
-            variant="outline"
-            icon={Minus}
-            onClick={() => onDecrement(order.id)}
-          />
-          <p>{order.quantity}</p>
-          <IconButton
-            size="sm"
-            variant="outline"
-            icon={Plus}
-            onClick={() => onIncrement(order.id)}
-          />
-          <IconButton
-            size="sm"
-            variant="red"
-            icon={Trash2}
-            onClick={() => onDelete(order.id)}
-          />
-        </div>
+      <div className="ml-auto flex items-center gap-2">
+        <button
+          onClick={() => onDecrement(order.id)}
+          className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 text-gray-500 hover:bg-gray-100"
+        >
+          <Minus size={16} />
+        </button>
 
-        <p className="text-md font-medium">
-          Rp {(order.price * order.quantity).toLocaleString()}
-        </p>
+        <span className="w-6 text-center">{order.quantity}</span>
+
+        <button
+          onClick={() => onIncrement(order.id)}
+          className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 text-gray-500 hover:bg-gray-100"
+        >
+          <Plus size={16} />
+        </button>
       </div>
     </div>
   );
