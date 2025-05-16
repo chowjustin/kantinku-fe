@@ -45,7 +45,6 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     null,
   );
 
-  // Load cart from localStorage on initial render
   useEffect(() => {
     const savedCart = localStorage.getItem("cart");
     if (savedCart) {
@@ -53,7 +52,6 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         const parsedCart = JSON.parse(savedCart);
         setItems(parsedCart);
 
-        // Set current tenant from loaded cart
         if (parsedCart.length > 0) {
           setCurrentTenantId(parsedCart[0].tenantId);
           setCurrentTenantName(parsedCart[0].tenantName);
@@ -65,11 +63,9 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, []);
 
-  // Save cart to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(items));
 
-    // Update current tenant when cart changes
     if (items.length > 0) {
       setCurrentTenantId(items[0].tenantId);
       setCurrentTenantName(items[0].tenantName);
@@ -91,12 +87,10 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       );
 
       if (existingItemIndex !== -1) {
-        // If item exists, increment its quantity
         const updatedItems = [...prevItems];
         updatedItems[existingItemIndex].quantity += 1;
         return updatedItems;
       } else {
-        // Otherwise add the new item
         return [
           ...prevItems,
           {
@@ -128,17 +122,14 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
           const newQuantity =
             type === "increment" ? item.quantity + 1 : item.quantity - 1;
 
-          // Return the updated item if quantity is still positive
           if (newQuantity > 0) {
             return { ...item, quantity: newQuantity };
           }
-          // For zero or negative quantity, we'll filter it out in the next step
           return { ...item, quantity: 0 };
         }
         return item;
       });
 
-      // If decrementing made the quantity zero, remove the item
       if (type === "decrement") {
         return updatedItems.filter((item) => item.quantity > 0);
       }

@@ -28,7 +28,7 @@ const MenuContent = () => {
               <div className="relative w-full aspect-square">
                 {/* Background Menu */}
                 <Image
-                  src="/images/BackgroundMenu.png"
+                  src={"/images/BackgroundMenu.png"}
                   alt="Background"
                   fill
                   className="object-contain"
@@ -37,10 +37,10 @@ const MenuContent = () => {
                 {/* Menu Image */}
                 <div className="absolute inset-0 m-[3%] rounded-tl-[25%] rounded-tr-[12%] rounded-b-[25%] overflow-hidden">
                   <Image
-                    src="/images/BackgroundHero.png"
+                    src={tenant.image_url || "/images/BackgroundHero.png"}
                     alt="Menu Image"
                     fill
-                    className="object-cover"
+                    className="object-fill"
                   />
                 </div>
 

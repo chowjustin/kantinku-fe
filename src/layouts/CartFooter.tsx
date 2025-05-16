@@ -1,15 +1,14 @@
 import { useCart } from "@/context/CartContext";
 import Link from "next/link";
 import { AlertCircle, ExternalLink, ShoppingBag } from "lucide-react";
-import { useOrderStatus } from "@/app/hooks/orderHooks";
 import { useEffect, useState } from "react";
+import { useOrderStatus } from "@/app/hooks/useGetOrderStatus";
 
 const CartFooter = () => {
   const { totalItems, totalPrice, currentTenantName } = useCart();
   const [orderId, setOrderId] = useState<string | null>(null);
   const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
 
-  // Get order ID from localStorage on component mount
   useEffect(() => {
     const storedOrderId = localStorage.getItem("pendingOrderId");
     if (storedOrderId) {
@@ -22,26 +21,21 @@ const CartFooter = () => {
     }
   }, []);
 
-  // Use the orderStatus hook to get payment status
   const { data: orderData } = useOrderStatus(orderId);
   const paymentStatus = orderData?.data?.payment_status || "pending";
 
-  // Don't show footer if there are no items and no pending order
   if (
     totalItems === 0 &&
     (!orderId || ["success", "settlement", "capture"].includes(paymentStatus))
   ) {
     return null;
   }
-
-  // Handle redirection to payment page
   const handleRedirectToPayment = () => {
     if (paymentUrl) {
       window.open(paymentUrl, "_blank");
     }
   };
 
-  // If there's a pending payment, show the payment status
   if (orderId && paymentStatus === "pending") {
     return (
       <div className="fixed bottom-0 left-0 right-0 bg-white shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] p-4 z-50">
@@ -70,9 +64,8 @@ const CartFooter = () => {
     );
   }
 
-  // Regular cart footer
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] p-4 z-50">
+    <div className="fixed bottom-0 left-0 right-0 bg-white shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] p-4 z-50 px-4 sm:px-6 md:px-8 lg:px-[5%]">
       <div className="max-w-screen-xl mx-auto flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="bg-[#243E80] text-white p-2 rounded-full">

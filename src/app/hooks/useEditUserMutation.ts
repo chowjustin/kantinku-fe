@@ -16,6 +16,18 @@ export default function useEditUserMutation({
     useMutation({
       mutationFn: async (data: UpdateUserRequest) => {
         const path = isTenant ? "/tenant/me" : "/user/me";
+        if (data.file instanceof File) {
+          const formData = new FormData();
+
+          formData.append("image", data.file);
+
+          return await api.patch(path, formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          });
+        }
+
         return await api.patch(path, data);
       },
       onSuccess: () => {

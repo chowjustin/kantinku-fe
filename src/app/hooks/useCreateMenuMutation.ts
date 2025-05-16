@@ -7,6 +7,7 @@ export type CreateMenuRequest = {
   deskripsi: string;
   harga: number;
   stok: number;
+  image?: File;
 };
 
 interface CreateMenuProps {

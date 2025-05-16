@@ -13,6 +13,7 @@ import ProfileSkeleton from "@/app/profile/components/ProfileSkeleton";
 import { removeToken } from "@/lib/cookies";
 import { useRouter } from "next/navigation";
 import formatISOToDayMonthYear from "@/app/utils/dateUtils";
+import TenantProfileImage from "@/app/dashboard/profile/components/ProfileImage";
 
 interface ModalState {
   nama: boolean;
@@ -66,6 +67,13 @@ export default function ProfileContainer() {
       <div>
         <h1 className="text-3xl font-semibold max-md:text-2xl">Profil Kamu</h1>
       </div>
+
+      {isTenant && (
+        <TenantProfileImage
+          imageUrl={user?.image_url || null}
+          isTenant={isTenant}
+        />
+      )}
 
       <div className="bg-white rounded-lg shadow-md p-6">
         <div className="space-y-6">

@@ -1,6 +1,13 @@
 "use client";
 import * as React from "react";
-import { CircleUser, LayoutDashboard, Menu, Search, X } from "lucide-react";
+import {
+  CircleUser,
+  LayoutDashboard,
+  Menu,
+  ScrollText,
+  Search,
+  X,
+} from "lucide-react";
 import { usePathname } from "next/navigation";
 import ButtonLink from "@/components/links/ButtonLink";
 import UnstyledLink from "@/components/links/UnstyledLink";
@@ -78,7 +85,7 @@ export default function Navbar() {
         </div>
         <Button
           size="sm"
-          variant="primary"
+          variant="outline"
           onClick={() => handleClick("tenants")}
           className="absolute top-4 right-4 px-1.5 sm:right-6 md:right-8"
         >
@@ -100,15 +107,26 @@ export default function Navbar() {
                     Login
                   </ButtonLink>
                 ) : user?.role === "student" ? (
-                  <ButtonLink
-                    variant="primary"
-                    href="/profile"
-                    size="sm"
-                    className="text-sm px-2 py-1 font-normal text-white md:leading-none"
-                    leftIcon={CircleUser}
-                  >
-                    Profile
-                  </ButtonLink>
+                  <div className="flex gap-2">
+                    <ButtonLink
+                      variant="outline"
+                      href="/orders"
+                      size="sm"
+                      className="text-sm px-2 py-1 font-normal md:leading-none"
+                      leftIcon={ScrollText}
+                    >
+                      History
+                    </ButtonLink>
+                    <ButtonLink
+                      variant="primary"
+                      href="/profile"
+                      size="sm"
+                      className="text-sm px-2 py-1 font-normal text-white md:leading-none"
+                      leftIcon={CircleUser}
+                    >
+                      Profile
+                    </ButtonLink>
+                  </div>
                 ) : (
                   <ButtonLink
                     variant="primary"
@@ -177,7 +195,7 @@ export default function Navbar() {
         <div className="flex items-center gap-2">
           <Button
             size="sm"
-            variant="primary"
+            variant="outline"
             onClick={() => handleClick("tenants")}
           >
             <Search size={16} />
@@ -194,15 +212,26 @@ export default function Navbar() {
               </ButtonLink>
             </>
           ) : user?.role === "student" ? (
-            <ButtonLink
-              variant="primary"
-              size="sm"
-              href="/profile"
-              className="text-lg font-normal text-white md:leading-none"
-              leftIcon={CircleUser}
-            >
-              Profile
-            </ButtonLink>
+            <div className="flex gap-2">
+              <ButtonLink
+                variant="outline"
+                href="/orders"
+                size="sm"
+                className="text-sm px-2 py-1 font-normal md:leading-none"
+                leftIcon={ScrollText}
+              >
+                History
+              </ButtonLink>
+              <ButtonLink
+                variant="primary"
+                href="/profile"
+                size="sm"
+                className="text-sm px-2 py-1 font-normal text-white md:leading-none"
+                leftIcon={CircleUser}
+              >
+                Profile
+              </ButtonLink>
+            </div>
           ) : (
             <ButtonLink
               variant="primary"

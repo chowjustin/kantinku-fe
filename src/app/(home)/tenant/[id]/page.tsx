@@ -41,11 +41,12 @@ export default function DetailTenant() {
         <div className="px-8 md:px-16 py-8 md:py-16 space-y-6">
           <div className="flex flex-col md:flex-row gap-4">
             <Image
-              src="/images/BackgroundHero.png"
+              src={tenantData?.image_url || "/images/BackgroundHero.png"}
               alt="Banner"
               width={100}
               height={100}
-              className="w-full md:w-64 h-40 rounded-lg object-cover"
+              className="w-full md:w-64 h-40 rounded-lg object-cover cursor-pointer"
+              onClick={() => setIsModalOpen(true)}
             />
 
             <div className="flex flex-col gap-4">
@@ -62,8 +63,8 @@ export default function DetailTenant() {
                     {tenantData?.nama_canteen}
                   </span>
                 </p>
-                <p>💰 40rb–100rb</p>
                 <p>☎️ {tenantData?.nomor_telepon}</p>
+                <p>💌 {tenantData?.email}</p>
               </div>
             </div>
           </div>

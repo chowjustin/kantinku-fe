@@ -1,5 +1,6 @@
 import OrderItem from "./OrderItem";
 import { CartItem } from "@/context/CartContext";
+import Link from "next/link";
 
 type Props = {
   orders: CartItem[];
@@ -21,11 +22,17 @@ export default function OrderList({
   return (
     <div className="flex flex-col gap-4 rounded-xl border bg-white p-4">
       <div className="flex justify-between items-center">
-        <h2 className="font-semibold">Pesanan</h2>
+        <div className="flex flex-col">
+          <h2 className="font-semibold">Pesanan</h2>
+          <span className="text-sm"> dari {orders[0]?.tenantName || ""}</span>
+        </div>
         {orders.length > 0 && (
-          <p className="text-sm text-gray-500">
-            dari <span className="font-medium">{orders[0].tenantName}</span>
-          </p>
+          <Link
+            href={`/tenant/${orders[0].tenantId.toString()}`}
+            className="mt-1 w-fit text-sm text-blue-500 hover:underline"
+          >
+            Tambah Pesanan
+          </Link>
         )}
       </div>
 

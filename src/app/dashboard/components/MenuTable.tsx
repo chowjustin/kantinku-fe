@@ -11,6 +11,7 @@ import { useGetTenantByID } from "@/app/hooks/useGetTenantByID";
 import useAuthStore from "@/app/stores/useAuthStore";
 import ConfirmationModal from "@/components/form/ConfirmationModal";
 import useDeleteMenuMutation from "@/app/hooks/useDeleteMenuMutation";
+import MenuImageCell from "@/app/dashboard/components/MenuImageCell";
 
 export default function MenuTable() {
   const { user } = useAuthStore();
@@ -102,6 +103,16 @@ const getColumns = (
     accessorKey: "id",
     header: "Nomor",
     cell: (info) => info.row.index + 1,
+  },
+  {
+    id: "image_url",
+    header: "Foto",
+    cell: ({ row }) => (
+      <MenuImageCell
+        menuId={row.original.id}
+        imageUrl={row.original.image_url}
+      />
+    ),
   },
   {
     accessorKey: "nama",

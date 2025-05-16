@@ -44,7 +44,7 @@ export default function OrderItem({
             <h3 className="font-medium">{order.name}</h3>
             <button
               onClick={() => onDelete(order.id)}
-              className="text-gray-500 hover:text-gray-700"
+              className="text-gray-500 hover:text-gray-700 hover:bg-red-400 rounded-full p-1 transition duration-200 hover:text-white"
             >
               <X size={16} />
             </button>

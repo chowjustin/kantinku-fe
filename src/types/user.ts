@@ -18,6 +18,9 @@ export type UpdateUserRequest = {
   username?: string;
   password?: string;
   role?: string;
+  nama_tenant?: string;
+  nomor_telepon?: string;
+  file?: File;
 };
 
 export type WithToken = {
