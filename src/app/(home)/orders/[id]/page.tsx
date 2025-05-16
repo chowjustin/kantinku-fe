@@ -215,7 +215,7 @@ function OrderDetailsPage() {
         </div>
 
         {/* Navigation Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 z-30">
+        <div className="flex flex-col sm:flex-row gap-4 z-50">
           <ButtonLink
             href="/orders"
             variant="ghost"

@@ -12,7 +12,6 @@ import { usePathname } from "next/navigation";
 import ButtonLink from "@/components/links/ButtonLink";
 import UnstyledLink from "@/components/links/UnstyledLink";
 import NextImage from "@/components/NextImage";
-import { getToken } from "@/lib/cookies";
 import clsxm from "@/lib/clsxm";
 import Link from "next/link";
 import Button from "@/components/buttons/Button";
@@ -21,8 +20,6 @@ import useAuthStore from "@/app/stores/useAuthStore";
 const links = [{ href: "/", label: "" }];
 
 export default function Navbar() {
-  const token = getToken();
-  const [isLogin, setIsLogin] = React.useState<boolean>(false);
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
 
   const { user } = useAuthStore();
@@ -50,10 +47,6 @@ export default function Navbar() {
   const isActive = (href: string) => pathname === href;
   const getTextColor = (href: string) =>
     pathname === href ? "text-primary-base font-semibold" : "text-black";
-
-  React.useEffect(() => {
-    if (token) setIsLogin(true);
-  }, [token]);
 
   return (
     <section
@@ -97,7 +90,7 @@ export default function Navbar() {
           <div className="fixed top-[3.5rem] left-0 w-full bg-white z-40 max-h-[calc(100vh-72px)] overflow-y-auto shadow-lg">
             <div className="relative z-50 flex flex-col p-6">
               <div className="flex justify-between items-center mb-6">
-                {!isLogin ? (
+                {!user ? (
                   <ButtonLink
                     variant="primary"
                     size="sm"
@@ -200,7 +193,7 @@ export default function Navbar() {
           >
             <Search size={16} />
           </Button>
-          {!isLogin ? (
+          {!user ? (
             <>
               <ButtonLink
                 variant="primary"

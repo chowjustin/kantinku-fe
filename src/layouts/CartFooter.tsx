@@ -1,3 +1,5 @@
+"use client";
+
 import { useCart } from "@/context/CartContext";
 import Link from "next/link";
 import { AlertCircle, ExternalLink, ShoppingBag } from "lucide-react";
@@ -24,6 +26,15 @@ const CartFooter = () => {
   const { data: orderData } = useOrderStatus(orderId);
   const paymentStatus = orderData?.data?.payment_status || "pending";
 
+  useEffect(() => {
+    if (["success", "settlement", "capture"].includes(paymentStatus)) {
+      localStorage.removeItem("pendingOrderId");
+      localStorage.removeItem("pendingPaymentUrl");
+      setOrderId(null);
+      setPaymentUrl(null);
+    }
+  }, [paymentStatus]);
+
   if (
     totalItems === 0 &&
     (!orderId || ["success", "settlement", "capture"].includes(paymentStatus))
@@ -38,7 +49,7 @@ const CartFooter = () => {
 
   if (orderId && paymentStatus === "pending") {
     return (
-      <div className="fixed bottom-0 left-0 right-0 bg-white shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] p-4 z-50">
+      <div className="fixed bottom-0 left-0 right-0 bg-white shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] p-4 z-40">
         <div className="max-w-screen-xl mx-auto">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">

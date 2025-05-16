@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import api from "@/lib/api";
+import { formatDateToLocale } from "@/app/utils/dateUtils";
 
 type Order = {
   id: number;
@@ -37,13 +38,15 @@ function OrderHistoryPage() {
   const [activeTab, setActiveTab] = useState<string>("pending");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [paymentStatus, setPaymentStatus] = useState<string>("pending");
+  const [orderStatus, setOrderStatus] = useState<string>("");
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
         setIsLoading(true);
         const response = await api.get(
-          `/order?payment_status=${activeTab}&order_status=${activeTab}`,
+          `/order?payment_status=${paymentStatus}&order_status=${orderStatus}`,
         );
         if (response.data.status) {
           setOrders(response.data.data);
@@ -59,7 +62,7 @@ function OrderHistoryPage() {
     };
 
     fetchOrders();
-  }, [activeTab]);
+  }, [paymentStatus, orderStatus]);
 
   const handleViewOrder = (orderId: number) => {
     router.push(`/orders/${orderId}`);
@@ -73,13 +76,6 @@ function OrderHistoryPage() {
     } else {
       return <XCircle className="text-red-500" />;
     }
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleString("id-ID", {
-      dateStyle: "medium",
-      timeStyle: "short",
-    });
   };
 
   return (
@@ -100,7 +96,10 @@ function OrderHistoryPage() {
                 ? "border-b-2 border-[#243E80] text-[#243E80]"
                 : "text-gray-500"
             }`}
-            onClick={() => setActiveTab("pending")}
+            onClick={() => {
+              setActiveTab("pending");
+              setPaymentStatus("pending");
+            }}
           >
             Menunggu Pembayaran
           </button>
@@ -110,19 +109,25 @@ function OrderHistoryPage() {
                 ? "border-b-2 border-[#243E80] text-[#243E80]"
                 : "text-gray-500"
             }`}
-            onClick={() => setActiveTab("settlement")}
+            onClick={() => {
+              setActiveTab("settlement");
+              setPaymentStatus("settlement");
+            }}
           >
             Sedang Dikerjakan
           </button>
           <button
             className={`pb-4 px-4 font-medium ${
-              activeTab === "cancel"
+              activeTab === "history"
                 ? "border-b-2 border-[#243E80] text-[#243E80]"
                 : "text-gray-500"
             }`}
-            onClick={() => setActiveTab("cancel")}
+            onClick={() => {
+              setActiveTab("history");
+              setPaymentStatus("");
+            }}
           >
-            Dibatalkan
+            History
           </button>
         </div>
 
@@ -170,15 +175,23 @@ function OrderHistoryPage() {
                   <div>
                     <p className="font-medium">Order #{order.id}</p>
                     <p className="text-sm text-gray-500">
-                      {formatDate(order.created_at)}
+                      {formatDateToLocale(order.created_at)}
                     </p>
                   </div>
-                  <div className="flex items-center gap-1">
-                    {getStatusIcon(order.payment_status)}
-                    <span className="text-sm font-medium capitalize">
-                      {order.payment_status}
-                    </span>
-                  </div>
+                  {activeTab === "settlement" ? (
+                    <div className="flex items-center gap-1">
+                      <span className="text-sm font-medium capitalize">
+                        {order.order_status}
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-1">
+                      {getStatusIcon(order.payment_status)}
+                      <span className="text-sm font-medium capitalize">
+                        {order.payment_status}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 <div className="flex items-center gap-2 mt-4 text-[#243E80]">

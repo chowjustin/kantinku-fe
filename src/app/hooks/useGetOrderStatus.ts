@@ -10,6 +10,9 @@ export function useOrderStatus(orderId: string | null) {
       return response.data;
     },
     enabled: !!orderId,
+    refetchInterval: 10000,
+    refetchIntervalInBackground: true,
+    refetchOnWindowFocus: true,
     retry: 3,
   });
 }

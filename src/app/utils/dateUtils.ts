@@ -7,4 +7,11 @@ function formatISOToDayMonthYear(dateString: string) {
   });
 }
 
+export const formatDateToLocale = (dateString: string) => {
+  return new Date(dateString).toLocaleString("id-ID", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
+};
+
 export default formatISOToDayMonthYear;

@@ -48,7 +48,7 @@ function CheckoutPage() {
         )
       ) {
         clearCart();
-        router.push(`/order/${orderId}`);
+        router.push(`/orders/${orderId}`);
       }
     }
   }, [orderData, clearCart, orderId, router]);
@@ -100,7 +100,7 @@ function CheckoutPage() {
             setPaymentStatus(data.data.payment_status);
 
             setIsRedirecting(true);
-            router.push(`/order/${newOrderId}`);
+            router.push(`/orders/${newOrderId}`);
           }
         },
       },
