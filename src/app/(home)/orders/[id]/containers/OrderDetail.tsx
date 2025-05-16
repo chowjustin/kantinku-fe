@@ -19,6 +19,11 @@ import { useQueryClient } from "@tanstack/react-query";
 import ButtonLink from "@/components/links/ButtonLink";
 import { useOrderStatus } from "@/app/hooks/useGetOrderStatus";
 
+type MenuItem = {
+  menu_name: string;
+  quantity: number;
+};
+
 export default withAuth(OrderDetailsContainer, "student");
 
 function OrderDetailsContainer() {
@@ -38,6 +43,7 @@ function OrderDetailsContainer() {
   const orderDetails = orderData?.data?.order;
   const paymentStatus = orderDetails?.payment_status || "pending";
   const orderStatus = orderDetails?.order_status || "pending";
+  const orderItems = orderDetails?.items || [];
 
   useEffect(() => {
     if (orderDetails?.redirect_url) {
@@ -197,6 +203,26 @@ function OrderDetailsContainer() {
                 })}
               </span>
             </div>
+
+            <div className="py-2 border-b border-gray-100">
+              <span className="text-gray-600 block mb-2">Item Pesanan</span>
+              <div className="pl-6">
+                {orderItems.length > 0 ? (
+                  orderItems.map((item: MenuItem, index: number) => (
+                    <div
+                      key={index}
+                      className="flex justify-between items-center py-1"
+                    >
+                      <span className="font-medium">{item.menu_name}</span>
+                      <span className="text-gray-800">x{item.quantity}</span>
+                    </div>
+                  ))
+                ) : (
+                  <span className="text-gray-500 italic">Tidak ada item</span>
+                )}
+              </div>
+            </div>
+
             {orderDetails.notes && (
               <div className="flex justify-between py-2 border-b border-gray-100">
                 <span className="text-gray-600">Catatan</span>

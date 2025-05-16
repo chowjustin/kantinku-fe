@@ -101,6 +101,7 @@ function OrderHistoryContainer() {
             onClick={() => {
               setActiveTab("pending");
               setPaymentStatus("pending");
+              setOrderStatus("");
             }}
           >
             Menunggu Pembayaran
@@ -114,6 +115,7 @@ function OrderHistoryContainer() {
             onClick={() => {
               setActiveTab("settlement");
               setPaymentStatus("settlement");
+              setOrderStatus("pending,processing,ready");
             }}
           >
             Sedang Dikerjakan
@@ -127,6 +129,7 @@ function OrderHistoryContainer() {
             onClick={() => {
               setActiveTab("history");
               setPaymentStatus("");
+              setOrderStatus("");
             }}
           >
             History
@@ -153,10 +156,10 @@ function OrderHistoryContainer() {
             <h2 className="text-xl font-semibold mb-2">Tidak ada pesanan</h2>
             <p className="text-gray-500 mb-6">
               {activeTab === "pending"
-                ? "Anda belum memiliki pesanan yang menunggu"
-                : activeTab === "success"
-                  ? "Anda belum memiliki pesanan yang selesai"
-                  : "Anda belum memiliki pesanan yang dibatalkan"}
+                ? "Anda belum memiliki pesanan yang belum dibayar"
+                : activeTab === "settlement"
+                  ? "Anda tidak memiliki pesanan yang sedang dikerjakan"
+                  : "Anda belum pernah melakukan pemesanan apapun"}
             </p>
             <Link
               href="/"
@@ -180,17 +183,17 @@ function OrderHistoryContainer() {
                       {formatDateToLocale(order.created_at)}
                     </p>
                   </div>
-                  {activeTab === "settlement" ? (
-                    <div className="flex items-center gap-1">
-                      <span className="text-sm font-medium capitalize">
-                        {order.order_status}
-                      </span>
-                    </div>
-                  ) : (
+                  {activeTab === "pending" ? (
                     <div className="flex items-center gap-1">
                       {getStatusIcon(order.payment_status)}
                       <span className="text-sm font-medium capitalize">
                         {order.payment_status}
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-1">
+                      <span className="text-sm font-medium capitalize">
+                        {order.order_status}
                       </span>
                     </div>
                   )}

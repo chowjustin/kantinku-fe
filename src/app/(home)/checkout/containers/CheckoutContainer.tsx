@@ -159,7 +159,7 @@ function CheckoutContainer() {
 
         {!orderId && (
           <div className="fixed bottom-0 left-0 right-0 bg-white shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] p-4 z-50 px-4 sm:px-6 md:px-8 lg:px-[5%]">
-            <div className="max-w-screen-xl mx-auto flex items-center justify-between">
+            <div className="mx-auto flex items-center justify-between">
               <div className="flex flex-col w-full">
                 <p className="text-xl font-bold">
                   Rp {totalPrice.toLocaleString()}
