@@ -1,22 +1,11 @@
-"use client";
+import { Metadata } from "next";
+import Home from "@/app/(home)/containers/Homepage";
 
-import Navbar from "@/layouts/Navbar";
-import Hero from "./components/Hero";
-import MenuSection from "./components/MenuSection";
-import Footer from "@/layouts/Footer";
-import CartFooter from "@/layouts/CartFooter";
-import withAuth from "@/components/hoc/withAuth";
+export const metadata: Metadata = {
+  title: "Home",
+  description: "Halaman Beranda KantinKu",
+};
 
-export default withAuth(Home, "public");
-
-function Home() {
-  return (
-    <>
-      <Navbar />
-      <Hero />
-      <MenuSection />
-      <CartFooter />
-      <Footer />
-    </>
-  );
+export default function Homepage() {
+  return <Home />;
 }

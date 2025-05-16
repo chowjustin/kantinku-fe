@@ -14,6 +14,7 @@ import { removeToken } from "@/lib/cookies";
 import { useRouter } from "next/navigation";
 import formatISOToDayMonthYear from "@/app/utils/dateUtils";
 import TenantProfileImage from "@/app/dashboard/profile/components/ProfileImage";
+import withAuth from "@/components/hoc/withAuth";
 
 interface ModalState {
   nama: boolean;
@@ -26,7 +27,9 @@ interface ModalState {
   image_url: boolean;
 }
 
-export default function ProfileContainer() {
+export default withAuth(ProfileContainer, "student");
+
+function ProfileContainer() {
   const { user: storedUser, logout } = useAuthStore();
 
   const isTenant = storedUser?.role === "tenant";

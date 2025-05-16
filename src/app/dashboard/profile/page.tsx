@@ -1,10 +1,11 @@
-"use client";
+import { Metadata } from "next";
+import DashboardProfile from "@/app/dashboard/containers/TenantProfile";
 
-import ProfileContainer from "@/app/profile/containers/Profile";
-import withAuth from "@/components/hoc/withAuth";
+export const metadata: Metadata = {
+  title: "Profil",
+  description: "Profil Tenant KantinKu",
+};
 
-export default withAuth(DashboardProfile, "tenant");
-
-function DashboardProfile() {
-  return <ProfileContainer />;
+export default function TenantProfilePage() {
+  return <DashboardProfile />;
 }
