@@ -8,11 +8,23 @@ import Providers from "@/app/providers";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://kantinku-its.vercel.app/"),
   title: {
-    default: "Nextjs Starter Template",
-    template: "%s | Nextjs Starter Template",
+    default: "KantinKu",
+    template: "%s - KantinKu",
   },
-  description: "Nextjs 14.2.1 + Tailwind CSS starter template",
+  description:
+    "KantinKu - Solusi untuk memudahkan pemesanan makanan di lingkungan kampus!",
+  twitter: {
+    card: "summary_large_image",
+  },
+  robots: { index: true, follow: true },
+  authors: [
+    {
+      name: "KantinKu",
+      url: "https://kantinku-its.vercel.app/",
+    },
+  ],
 };
 
 export default function RootLayout({

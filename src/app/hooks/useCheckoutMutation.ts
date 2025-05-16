@@ -13,7 +13,7 @@ export function useCheckoutMutation() {
       toast.success("Pesanan berhasil dibuat!");
     },
     onError: (error: any) => {
-      toast.error(error?.response?.data?.message || "Gagal membuat pesanan!");
+      toast.error(error?.response?.data?.error || "Gagal membuat pesanan!");
     },
   });
 }
