@@ -44,7 +44,7 @@ function CheckoutPage() {
 
       if (
         ["success", "settlement", "capture"].includes(
-          orderData.data.payment_status.toLowerCase(),
+          orderData.data.payment_status,
         )
       ) {
         clearCart();

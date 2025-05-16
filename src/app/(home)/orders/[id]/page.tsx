@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 
 import {
   AlertCircle,
@@ -22,7 +22,6 @@ import { useOrderStatus } from "@/app/hooks/useGetOrderStatus";
 function OrderDetailsPage() {
   const params = useParams();
   const orderId = params.id as string;
-  const router = useRouter();
   const { clearCart } = useCart();
   const queryClient = useQueryClient();
 
@@ -46,9 +45,7 @@ function OrderDetailsPage() {
     // Check if payment is completed, then clear cart
     if (
       orderDetails &&
-      ["success", "settlement", "capture"].includes(
-        orderDetails.payment_status.toLowerCase(),
-      )
+      ["success", "settlement", "capture"].includes(orderDetails.payment_status)
     ) {
       clearCart();
       localStorage.removeItem("pendingOrderId");
@@ -56,20 +53,25 @@ function OrderDetailsPage() {
     }
   }, [orderDetails, clearCart]);
 
-  const handleRedirectToPayment = () => {
+  // @ts-ignore
+  const handleRedirectToPayment = (e) => {
+    e.stopPropagation();
+
     if (paymentUrl) {
       window.open(paymentUrl, "_blank");
     }
   };
 
-  const handleRefetch = () => {
+  // @ts-ignore
+  const handleRefetch = (e) => {
+    e.stopPropagation();
     queryClient.invalidateQueries({ queryKey: ["order-status", orderId] });
   };
 
   if (isLoading) {
     return (
       <Layout withNavbar withFooter>
-        <div className="flex justify-center items-center min-h-screen">
+        <div className="relative flex justify-center items-center min-h-screen">
           <Loader2 size={50} className="animate-spin text-[#243E80]" />
         </div>
       </Layout>
@@ -98,7 +100,7 @@ function OrderDetailsPage() {
 
   return (
     <Layout withNavbar withFooter>
-      <div className="mx-auto w-full max-w-3xl pb-20 pt-12 md:pt-16 px-4 sm:px-6">
+      <div className="relative mx-auto w-full max-w-3xl pb-20 pt-12 md:pt-16 px-4 sm:px-6">
         <div className="flex justify-between">
           <div className="mb-8">
             <h1 className="text-2xl font-bold mb-2">Detail Pesanan</h1>
@@ -110,7 +112,6 @@ function OrderDetailsPage() {
           />
         </div>
 
-        {/* Order Status Card */}
         <div className="bg-white p-6 rounded-xl border mb-6">
           <div className="flex items-center gap-3 mb-4">
             {paymentStatus === "pending" ? (
@@ -182,7 +183,6 @@ function OrderDetailsPage() {
           )}
         </div>
 
-        {/* Order Details */}
         <div className="bg-white p-6 rounded-xl border mb-6">
           <h2 className="text-lg font-semibold mb-4">Informasi Pesanan</h2>
           <div className="space-y-3 text-sm">
@@ -214,8 +214,7 @@ function OrderDetailsPage() {
           </div>
         </div>
 
-        {/* Navigation Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 z-50">
+        <div className="flex flex-col sm:flex-row gap-4">
           <ButtonLink
             href="/orders"
             variant="ghost"

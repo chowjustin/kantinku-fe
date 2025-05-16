@@ -12,7 +12,7 @@ import SelectInput from "@/components/form/SelectInput";
 import api from "@/lib/api";
 import { FormProvider, useForm } from "react-hook-form";
 import ConfirmationModal from "@/components/form/ConfirmationModal";
-import formatISOToDayMonthYear from "@/app/utils/dateUtils";
+import { formatDateToLocale } from "@/app/utils/dateUtils";
 
 interface MenuItem {
   menu: string;
@@ -27,7 +27,7 @@ interface OrderData {
   pemesan: string;
   createdAt: string;
   createdAtDisplay: string;
-  status: string;
+  order_status: string;
 }
 
 interface QueueItem {
@@ -36,7 +36,7 @@ interface QueueItem {
   createdAt: string;
   pemesan: string;
   pesanan: MenuItem[];
-  status?: string;
+  order_status?: string;
 }
 
 const STATUS_OPTIONS = [
@@ -87,8 +87,8 @@ function QueueTable() {
       notes: order.notes || "-",
       pemesan: order.pemesan,
       createdAt: order.createdAt,
-      createdAtDisplay: formatISOToDayMonthYear(order.createdAt),
-      status: order.status || "pending",
+      createdAtDisplay: formatDateToLocale(order.createdAt),
+      order_status: order.order_status || "pending",
     }));
   }, [queueData]);
 
@@ -142,10 +142,6 @@ function QueueTable() {
   const columns = React.useMemo<ColumnDef<OrderData>[]>(
     () => [
       {
-        accessorKey: "orderId",
-        header: "No. Order",
-      },
-      {
         accessorKey: "pesananDisplay",
         header: "Pesanan",
         cell: ({ row }) => (
@@ -167,10 +163,10 @@ function QueueTable() {
         header: "Waktu Pesan",
       },
       {
-        accessorKey: "status",
+        accessorKey: "order_status",
         header: "Status",
         cell: ({ row }) => {
-          const status = row.original.status;
+          const status = row.original.order_status;
           return (
             <div
               className={`px-2 py-1 rounded-md text-xs font-medium inline-block ${STATUS_COLORS[status] || "bg-gray-100"}`}
@@ -190,15 +186,16 @@ function QueueTable() {
               id={`status-${row.original.orderId}`}
               label={null}
               placeholder="Ubah Status"
+              isSearchable={false}
               options={STATUS_OPTIONS}
               containerClassName="w-fit mx-auto"
               onChange={(selectedOption: any) => {
                 const newStatus = selectedOption?.value;
-                if (newStatus && newStatus !== row.original.status) {
+                if (newStatus && newStatus !== row.original.order_status) {
                   openModal(row.original.orderId, newStatus);
                 }
               }}
-              value={row.original.status}
+              value={row.original.order_status}
               hideError={true}
             />
           </FormProvider>

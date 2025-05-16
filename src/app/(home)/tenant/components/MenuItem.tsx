@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Menu } from "@/types/tenant/menu";
 import { useCart } from "@/context/CartContext";
 import { usePathname } from "next/navigation";
-import { Minus, Plus } from "lucide-react";
+import { AlertCircle, Minus, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import ConfirmationModal from "@/components/form/ConfirmationModal";
 
@@ -20,10 +20,13 @@ const MenuItem = ({ menu, tenantName }: PopularMenuItemProps) => {
 
   const [highlight, setHighlight] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [stockWarning, setStockWarning] = useState(false);
 
   const cartItem = items.find((item) => item.id === menu.id);
   const itemQuantity = cartItem?.quantity || 0;
   const isInCart = itemQuantity > 0;
+
+  const isStockLimited = menu.stok !== undefined && itemQuantity >= menu.stok;
 
   useEffect(() => {
     if (isInCart) {
@@ -33,9 +36,21 @@ const MenuItem = ({ menu, tenantName }: PopularMenuItemProps) => {
     }
   }, [itemQuantity, isInCart]);
 
+  useEffect(() => {
+    if (stockWarning) {
+      const timer = setTimeout(() => setStockWarning(false), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [stockWarning]);
+
   const handleAddToCart = () => {
     if (currentTenantId && currentTenantId !== tenantId) {
       setShowModal(true);
+      return;
+    }
+
+    if (menu.stok !== undefined && itemQuantity >= menu.stok) {
+      setStockWarning(true);
       return;
     }
 
@@ -49,20 +64,31 @@ const MenuItem = ({ menu, tenantName }: PopularMenuItemProps) => {
   };
 
   const handleIncrement = () => {
+    if (menu.stok !== undefined && itemQuantity >= menu.stok) {
+      setStockWarning(true);
+      return;
+    }
+
     updateQuantity(menu.id, "increment");
   };
 
   const handleDecrement = () => {
-    if (itemQuantity === 1) {
-      updateQuantity(menu.id, "decrement");
-    } else {
-      updateQuantity(menu.id, "decrement");
-    }
+    updateQuantity(menu.id, "decrement");
   };
+
+  const availableStock =
+    menu.stok !== undefined ? menu.stok - itemQuantity : null;
 
   return (
     <>
-      <div className="border rounded-xl p-4 flex flex-col md:flex-row justify-between items-start gap-4 w-full">
+      <div className="border rounded-xl p-4 flex flex-col md:flex-row justify-between items-start gap-4 w-full relative">
+        {stockWarning && (
+          <div className="absolute -top-2 right-2 bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-sm flex items-center gap-1 shadow-md z-10">
+            <AlertCircle size={14} />
+            <span>Stok terbatas</span>
+          </div>
+        )}
+
         <div className="flex flex-col gap-2 justify-between h-full">
           <div className="flex flex-col gap-2">
             <h4 className="font-bold text-xl">{menu?.nama}</h4>
@@ -70,9 +96,18 @@ const MenuItem = ({ menu, tenantName }: PopularMenuItemProps) => {
               {menu?.deskripsi}
             </p>
           </div>
-          <p className="text-xl font-semibold">
-            Rp{menu?.harga.toLocaleString("id-ID")}
-          </p>
+          <div className="flex flex-col gap-1">
+            <p className="text-xl font-semibold">
+              Rp{menu?.harga.toLocaleString("id-ID")}
+            </p>
+            {menu.stok !== undefined && (
+              <p
+                className={`text-sm  ${menu.stok === 0 && "text-red-500"} ${menu.stok < 10 && menu.stok > 0 ? "text-amber-600" : "text-gray-500"} ${itemQuantity === menu.stok && "text-red-500"}`}
+              >
+                Stok: {menu.stok}
+              </p>
+            )}
+          </div>
         </div>
         <div className="w-full md:w-32 flex flex-col gap-4">
           <Image
@@ -85,7 +120,7 @@ const MenuItem = ({ menu, tenantName }: PopularMenuItemProps) => {
 
           {isInCart ? (
             <div
-              className={`quantity-control cart-controls-enter ${highlight ? "quantity-highlight" : ""}`}
+              className={`quantity-control cart-controls-enter ${highlight ? "quantity-highlight" : ""} relative`}
             >
               <button
                 onClick={handleDecrement}
@@ -99,8 +134,9 @@ const MenuItem = ({ menu, tenantName }: PopularMenuItemProps) => {
 
               <button
                 onClick={handleIncrement}
-                className="quantity-btn increment"
+                className={`quantity-btn increment ${isStockLimited ? "opacity-50 cursor-not-allowed" : ""}`}
                 aria-label="Increase quantity"
+                disabled={isStockLimited}
               >
                 <Plus size={16} />
               </button>
@@ -108,10 +144,11 @@ const MenuItem = ({ menu, tenantName }: PopularMenuItemProps) => {
           ) : (
             <Button
               size="base"
-              className="bg-[#243E80] hover:bg-[#243E80] border-none hover:shadow-[#243E80] transition-all duration-300 py-2"
+              className={`bg-[#243E80] hover:bg-[#243E80] border-none hover:shadow-[#243E80] transition-all duration-300 py-2 ${menu.stok === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
               onClick={handleAddToCart}
+              disabled={menu.stok === 0}
             >
-              Tambah
+              {menu.stok === 0 ? "Habis" : "Tambah"}
             </Button>
           )}
         </div>

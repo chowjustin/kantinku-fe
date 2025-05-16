@@ -235,6 +235,11 @@ export default function SelectInput({
                 }}
                 styles={customStyles}
                 instanceId={reactId}
+                menuPortalTarget={
+                  typeof document !== "undefined" ? document.body : undefined
+                }
+                menuPosition="fixed"
+                menuPlacement="auto"
                 components={{
                   IndicatorSeparator: () => null,
                   DropdownIndicator: (props) => (
